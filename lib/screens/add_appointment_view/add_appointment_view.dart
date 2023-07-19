@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/styles/text_styles.dart';
-import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_cubit.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_states.dart';
@@ -55,8 +54,40 @@ class _Body extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 15.w),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _CustomAppBar(key: key),
+                const Spacer(),
+                InkWell(
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    height: 70.h,
+                    width: 80.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Sandy',
+                            style: TextStyles.textStyle16.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const Text(
+                            '22/9/1998',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ]),
+                  ),
+                )
               ],
             ),
           ),
