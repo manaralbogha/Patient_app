@@ -6,3 +6,5 @@ abstract class AddAppointmentStates extends Equatable {
 }
 
 class AddAppointmentInitial extends AddAppointmentStates {}
+
+class SelectDayState extends AddAppointmentStates {}

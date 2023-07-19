@@ -46,6 +46,9 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AddAppointmentCubit addAppointmentCubit =
+        BlocProvider.of<AddAppointmentCubit>(context);
+    addAppointmentCubit.createDatesList();
     return Column(
       children: [
         SizedBox(
@@ -58,35 +61,9 @@ class _Body extends StatelessWidget {
               children: [
                 _CustomAppBar(key: key),
                 const Spacer(),
-                InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    height: 70.h,
-                    width: 80.w,
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sandy',
-                            style: TextStyles.textStyle16.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const Text(
-                            '22/9/1998',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ]),
-                  ),
+                _DatesListView(
+                  addAppointmentCubit: addAppointmentCubit,
+                  key: key,
                 )
               ],
             ),
@@ -104,6 +81,78 @@ class _Body extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class _DatesListView extends StatelessWidget {
+  const _DatesListView({
+    super.key,
+    required this.addAppointmentCubit,
+  });
+
+  final AddAppointmentCubit addAppointmentCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          addAppointmentCubit.dates.length,
+          (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+            child: InkWell(
+              customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              onTap: () {
+                addAppointmentCubit.selectDay(index: index);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                height: 70.h,
+                width: 80.w,
+                decoration: BoxDecoration(
+                  color: addAppointmentCubit.selectIndexDay != index
+                      ? Colors.white24
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        addAppointmentCubit.days[index],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: addAppointmentCubit.selectIndexDay != index
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                addAppointmentCubit.days[index] == 'Wednesday'
+                                    ? 13.sp
+                                    : 16.sp),
+                      ),
+                      Text(
+                        addAppointmentCubit.dates[index],
+                        textAlign: TextAlign.center,
+                        style: TextStyles.textStyle16.copyWith(
+                            fontSize: 12.sp,
+                            color: addAppointmentCubit.selectIndexDay != index
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ]),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
