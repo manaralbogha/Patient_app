@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
 import '../../core/styles/text_styles.dart';
@@ -115,14 +116,5 @@ class LoginViewBody extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class AddAppointmentView extends StatelessWidget {
-  const AddAppointmentView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold();
   }
 }
