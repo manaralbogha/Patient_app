@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/styles/app_colors.dart';
 
 class CustomeImage extends StatelessWidget {
   final String? image;
@@ -30,7 +31,7 @@ class CustomeImage extends StatelessWidget {
           : Icon(
               Icons.person,
               size: 35.sp,
-              color: Colors.blue,
+              color: defaultColor,
             ),
     );
   }

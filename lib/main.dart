@@ -1,4 +1,4 @@
-
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
@@ -21,7 +21,6 @@ class PatientApp extends StatelessWidget {
     return ScreenUtilInit(
       builder: (context, child) {
         return MaterialApp(
-
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             useMaterial3: true,
@@ -34,11 +33,6 @@ class PatientApp extends StatelessWidget {
             AddAppointmentView.route: (context) => const AddAppointmentView(),
           },
         );
-
-            
-            
-            
-
       },
     );
   }

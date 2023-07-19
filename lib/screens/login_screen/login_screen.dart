@@ -1,8 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:jiffy/jiffy.dart';
 
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
 
@@ -123,66 +120,3 @@ class LoginViewBody extends StatelessWidget {
     );
   }
 }
-
-
-class AddAppointmentView extends StatelessWidget {
-  static const route = 'AddAppointmentView';
-  const AddAppointmentView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TestDates(dates: _createDatesList()),
-              ),
-            );
-          },
-          child: const Text('Add Appointment'),
-        ),
-      ),
-    );
-  }
-
-  List<String> _createDatesList() {
-    var jiffy = Jiffy.now();
-    List<String> dates = [];
-    dates.add(jiffy.MMMMEEEEd);
-    for (int i = 0; i < 30; i++) {
-      jiffy = jiffy.add(days: 1);
-      dates.add(jiffy.MMMMEEEEd);
-    }
-
-    log('List = $dates');
-    return dates;
-  }
-}
-
-class TestDates extends StatelessWidget {
-  final List<String> dates;
-  const TestDates({super.key, required this.dates});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Text(
-              dates[index],
-              style: const TextStyle(color: Colors.black, fontSize: 20),
-            );
-          },
-          itemCount: dates.length,
-          scrollDirection: Axis.vertical,
-        ),
-      ),
-    );
-  }
-}
-
-
