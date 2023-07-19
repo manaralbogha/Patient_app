@@ -4,6 +4,7 @@ class AddAppointmentModel {
   String description;
   int departmentId;
   int doctorIid;
+
   AddAppointmentModel({
     required this.date,
     required this.time,
