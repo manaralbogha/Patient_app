@@ -1,7 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:jiffy/jiffy.dart';
+
+import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
+
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
 import '../../core/styles/text_styles.dart';
@@ -120,6 +124,7 @@ class LoginViewBody extends StatelessWidget {
   }
 }
 
+
 class AddAppointmentView extends StatelessWidget {
   static const route = 'AddAppointmentView';
   const AddAppointmentView({super.key});
@@ -179,3 +184,5 @@ class TestDates extends StatelessWidget {
     );
   }
 }
+
+
