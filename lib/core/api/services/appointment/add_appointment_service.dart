@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:patient_app/core/api/http_api_services.dart';
@@ -25,9 +24,9 @@ abstract class AddAppointmentService {
         token: token,
       );
 
-      return right(AppointmentModel.fromJson(data));
+      return right(AppointmentModel.fromJson(data['Appointment']));
     } catch (ex) {
-      log('Exception: there is an error in Add Appointment method');
+      log('Exception: there is an error in addAppointment method');
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

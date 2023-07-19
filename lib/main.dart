@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
@@ -22,17 +21,24 @@ class PatientApp extends StatelessWidget {
     return ScreenUtilInit(
       builder: (context, child) {
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-            ),
-            initialRoute: CacheHelper.getData(key: 'Token') == null
-                ? LoginView.route
-                : AddAppointmentView.route,
-            routes: {
-              LoginView.route: (context) => const LoginView(),
-              AddAppointmentView.route: (context) => const AddAppointmentView(),
-            });
+
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+          ),
+          initialRoute: CacheHelper.getData(key: 'Token') == null
+              ? LoginView.route
+              : AddAppointmentView.route,
+          routes: {
+            LoginView.route: (context) => const LoginView(),
+            AddAppointmentView.route: (context) => const AddAppointmentView(),
+          },
+        );
+
+            
+            
+            
+
       },
     );
   }

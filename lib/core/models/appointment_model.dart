@@ -1,78 +1,37 @@
 class AppointmentModel {
-  bool? success;
-  String? message;
-  Appointment? appointment;
+  final String date;
+  final String time;
+  final String doctorId;
+  final String description;
+  final String departmentId;
+  final int patientId;
+  final String status;
+  final int id;
+  final String? cancelReason;
 
-  AppointmentModel({this.success, this.message, this.appointment});
+  AppointmentModel({
+    required this.date,
+    required this.time,
+    required this.doctorId,
+    required this.description,
+    required this.departmentId,
+    required this.patientId,
+    required this.status,
+    required this.id,
+    this.cancelReason,
+  });
 
-  AppointmentModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    appointment = json['Appointment'] != null
-        ? Appointment.fromJson(json['Appointment'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['success'] = success;
-    data['message'] = message;
-    if (appointment != null) {
-      data['Appointment'] = appointment!.toJson();
-    }
-    return data;
-  }
-}
-
-class Appointment {
-  String? date;
-  String? time;
-  String? doctorId;
-  String? description;
-  String? departmentId;
-  int? patientId;
-  String? status;
-  String? updatedAt;
-  String? createdAt;
-  int? id;
-
-  Appointment(
-      {this.date,
-      this.time,
-      this.doctorId,
-      this.description,
-      this.departmentId,
-      this.patientId,
-      this.status,
-      this.updatedAt,
-      this.createdAt,
-      this.id});
-
-  Appointment.fromJson(Map<String, dynamic> json) {
-    date = json['date'];
-    time = json['time'];
-    doctorId = json['doctor_id'];
-    description = json['description'];
-    departmentId = json['department_id'];
-    patientId = json['patient_id'];
-    status = json['status'];
-    updatedAt = json['updated_at'];
-    createdAt = json['created_at'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['date'] = date;
-    data['time'] = time;
-    data['doctor_id'] = doctorId;
-    data['description'] = description;
-    data['department_id'] = departmentId;
-    data['patient_id'] = patientId;
-    data['status'] = status;
-    data['updated_at'] = updatedAt;
-    data['created_at'] = createdAt;
-    data['id'] = id;
-    return data;
+  factory AppointmentModel.fromJson(Map<String, dynamic> jsonData) {
+    return AppointmentModel(
+      date: jsonData['date'],
+      time: jsonData['time'],
+      doctorId: jsonData['doctor_id'],
+      description: jsonData['description'],
+      departmentId: jsonData['department_id'],
+      patientId: jsonData['patient_id'],
+      status: jsonData['status'],
+      id: jsonData['id'],
+      cancelReason: jsonData['cancel_reason'] ?? '',
+    );
   }
 }
