@@ -15,6 +15,7 @@ class CustomeTextField extends StatelessWidget {
   final bool disableFocusNode;
   final String? initialValue;
   final TextStyle? hintStyle;
+  final TextCapitalization? textCapitalization;
   const CustomeTextField({
     super.key,
     this.hintText,
@@ -28,6 +29,7 @@ class CustomeTextField extends StatelessWidget {
     this.disableFocusNode = false,
     this.initialValue,
     this.hintStyle,
+    this.textCapitalization,
   });
 
   @override
@@ -50,7 +52,7 @@ class CustomeTextField extends StatelessWidget {
                   return null;
                 },
             onTap: onTap,
-            maxLines: 6,
+            textCapitalization: textCapitalization ?? TextCapitalization.none,
             initialValue: initialValue,
             focusNode: disableFocusNode ? AlwaysDisabledFocusNode() : null,
             obscureText: obscureText ?? false,

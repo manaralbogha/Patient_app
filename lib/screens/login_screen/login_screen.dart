@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
+import 'package:patient_app/screens/appointments_requests_screen/appointments_requests_view.dart';
 
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
@@ -49,6 +50,10 @@ class LoginViewBody extends StatelessWidget {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is LoginSuccess) {
           CacheHelper.saveData(key: 'Token', value: state.loginModel.token);
+          CacheHelper.saveData(key: 'Role', value: state.loginModel.role);
+          if (state.loginModel.role == 'secretary') {
+            return AppointmentsRequestsView(token: state.loginModel.token);
+          }
           return const AddAppointmentView();
         } else {
           return _body(context);

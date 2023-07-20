@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
+import 'package:patient_app/screens/appointments_requests_screen/appointments_requests_view.dart';
 import 'package:patient_app/screens/login_screen/login_screen.dart';
 
 void main() async {
@@ -27,10 +28,15 @@ class PatientApp extends StatelessWidget {
           ),
           initialRoute: CacheHelper.getData(key: 'Token') == null
               ? LoginView.route
-              : AddAppointmentView.route,
+              : CacheHelper.getData(key: 'Role') == 'secretary'
+                  ? AppointmentsRequestsView.route
+                  : AddAppointmentView.route,
           routes: {
             LoginView.route: (context) => const LoginView(),
             AddAppointmentView.route: (context) => const AddAppointmentView(),
+            AppointmentsRequestsView.route: (context) =>
+                AppointmentsRequestsView(
+                    token: CacheHelper.getData(key: 'Token')),
           },
         );
       },

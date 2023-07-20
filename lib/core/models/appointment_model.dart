@@ -1,9 +1,9 @@
 class AppointmentModel {
   final String date;
   final String time;
-  final String doctorId;
+  final int doctorId;
   final String description;
-  final String departmentId;
+  final int departmentId;
   final int patientId;
   final String status;
   final int id;

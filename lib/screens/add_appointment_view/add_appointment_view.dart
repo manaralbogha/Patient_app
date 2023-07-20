@@ -12,6 +12,7 @@ import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_cubit.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_states.dart';
+import 'package:patient_app/screens/login_screen/login_screen.dart';
 
 class AddAppointmentView extends StatelessWidget {
   static const route = 'AddAppointmentView';
@@ -367,7 +368,10 @@ class _CustomAppBar extends StatelessWidget {
             customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50.r),
             ),
-            onTap: () {},
+            onTap: () {
+              CacheHelper.deletData(key: 'Token');
+              Navigator.popAndPushNamed(context, LoginView.route);
+            },
             child: const Icon(
               Icons.arrow_forward_ios_outlined,
               color: Colors.white,
