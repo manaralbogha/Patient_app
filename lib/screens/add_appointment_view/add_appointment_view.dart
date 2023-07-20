@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/styles/text_styles.dart';
+import 'package:patient_app/core/widgets/custome_button.dart';
+import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
+import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_cubit.dart';
 import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_states.dart';
 import 'package:patient_app/screens/login_screen/login_screen.dart';
@@ -17,10 +22,15 @@ class AddAppointmentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddAppointmentCubit(),
-      child: const SafeArea(
-          child: Scaffold(
-        backgroundColor: defaultColor,
-        body: AddAppointmentViewBody(),
+      child: SafeArea(
+          child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: const Scaffold(
+          backgroundColor: defaultColor,
+          body: AddAppointmentViewBody(),
+        ),
       )),
     );
   }
@@ -33,9 +43,21 @@ class AddAppointmentViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddAppointmentCubit, AddAppointmentStates>(
       builder: (context, state) {
-        return _Body(
-          key: key,
-        );
+        if (state is AddAppointmentFailureState) {
+          return CustomeErrorWidget(
+            errorMsg: state.failureMsg,
+          );
+        } else if (state is AddAppointmentSuccessState) {
+          return _Body(
+            key: key,
+          );
+        } else if (state is AddAppointmentLodgingState) {
+          return const CustomeProgressIndicator();
+        } else {
+          return _Body(
+            key: key,
+          );
+        }
       },
     );
   }
@@ -73,6 +95,8 @@ class _Body extends StatelessWidget {
         ),
         Expanded(
           child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(25.r),
@@ -80,11 +104,146 @@ class _Body extends StatelessWidget {
               ),
               color: Colors.white,
             ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    _TimesButtons(addAppointmentCubit: addAppointmentCubit),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    TextFormField(
+                      maxLines: 3,
+                      controller: addAppointmentCubit.discretionController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.r),
+                        ),
+                        hintText: "Description . . .",
+                        hintStyle: TextStyle(
+                            fontSize: 20, color: defaultColor.withOpacity(.6)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    CustomeButton(
+                      onPressed: () {
+                        if (addAppointmentCubit.addAppointmentModel.date != null &&
+                            addAppointmentCubit.addAppointmentModel.time !=
+                                null &&
+                            addAppointmentCubit.discretionController.text !=
+                                '') {
+                          addAppointmentCubit.addAppointmentModel.description =
+                              addAppointmentCubit.discretionController.text;
+                          addAppointmentCubit.addAppointmentModel.departmentId =
+                              "1";
+                          addAppointmentCubit.addAppointmentModel.doctorIid =
+                              "1";
+
+                          addAppointmentCubit.addAppointment(
+                            token: CacheHelper.getData(key: 'Token'),
+                            addAppointmentModel:
+                                addAppointmentCubit.addAppointmentModel,
+                          );
+                        } else {}
+                      },
+                      text: 'ADD',
+                      width: double.infinity,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         )
       ],
     );
   }
+}
+
+class _TimesButtons extends StatelessWidget {
+  const _TimesButtons({
+    super.key,
+    required this.addAppointmentCubit,
+  });
+
+  final AddAppointmentCubit addAppointmentCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: List.generate(
+        2,
+        (indexR) => Column(
+          children: List.generate(
+            addAppointmentCubit.times1.length,
+            (index) => _timeDialogButton(
+              context,
+              onTap: () {
+                addAppointmentCubit.selectTime(index: index, indexR: indexR);
+              },
+              time: indexR == 0
+                  ? addAppointmentCubit.times1[index]
+                  : addAppointmentCubit.times2[index],
+              selectIndexTime: addAppointmentCubit.selectIndexTime != null
+                  ? addAppointmentCubit.selectIndexTime!.toInt()
+                  : null,
+              timeSelected: addAppointmentCubit.addAppointmentModel.time,
+              index: index,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _timeDialogButton(
+  BuildContext context, {
+  required void Function() onTap,
+  required String time,
+  int? selectIndexTime,
+  required int index,
+  String? timeSelected,
+  // required String value,
+}) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 5),
+    child: InkWell(
+      // splashColor: Colors.amber,
+      borderRadius: BorderRadius.circular(25.r),
+      onTap: onTap,
+      child: Container(
+        width: 150.w,
+        // margin: const EdgeInsets.only(bottom: 5),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: selectIndexTime == index && timeSelected == time
+                  ? Colors.green
+                  : Colors.black),
+          borderRadius: BorderRadius.circular(25.r),
+          color: selectIndexTime == index && timeSelected == time
+              ? Colors.grey.shade200
+              : Colors.white24,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              time,
+              style: TextStyles.textStyle20.copyWith(
+                  color: selectIndexTime == index && timeSelected == time
+                      ? Colors.green
+                      : defaultColor),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _DatesListView extends StatelessWidget {
