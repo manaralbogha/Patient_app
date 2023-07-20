@@ -13,7 +13,7 @@ abstract class GetAppointmentsRequestsService {
           await ApiServices.get(endPoint: 'indexAppointment', token: token);
       List<AppointmentModel> myAppointments = [];
       for (var item in data['Appointment']) {
-        myAppointments.add(AppointmentModel.fromJson(item));
+        myAppointments.add(AppointmentModel<int>.fromJson(item));
       }
       return right(myAppointments);
     } catch (ex) {

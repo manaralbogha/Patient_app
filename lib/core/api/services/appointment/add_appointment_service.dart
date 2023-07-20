@@ -24,7 +24,7 @@ abstract class AddAppointmentService {
         token: token,
       );
 
-      return right(AppointmentModel.fromJson(data['Appointment']));
+      return right(AppointmentModel<String>.fromJson(data['Appointment']));
     } catch (ex) {
       log('Exception: there is an error in addAppointment method');
       if (ex is DioException) {
