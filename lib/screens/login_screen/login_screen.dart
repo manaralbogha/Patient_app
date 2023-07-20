@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
 import 'package:patient_app/screens/appointments_requests_screen/appointments_requests_view.dart';
+import 'package:patient_app/screens/register_screen/register_screen.dart';
 
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
@@ -109,7 +111,7 @@ class LoginViewBody extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: screenSize.height * .15),
+            SizedBox(height: 40.h),
             Center(
               child: CustomeButton(
                 text: 'Login',
@@ -118,7 +120,33 @@ class LoginViewBody extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: screenSize.height * .04),
+            SizedBox(height: 12.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Don't Hava an Account?",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, RegisterView.route);
+                  },
+                  child: const Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 15.h),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
 import 'package:patient_app/screens/appointments_requests_screen/appointments_requests_view.dart';
 import 'package:patient_app/screens/login_screen/login_screen.dart';
+import 'package:patient_app/screens/register_screen/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ class PatientApp extends StatelessWidget {
                   : AddAppointmentView.route,
           routes: {
             LoginView.route: (context) => const LoginView(),
+            RegisterView.route: (context) => const RegisterView(),
             AddAppointmentView.route: (context) => const AddAppointmentView(),
             AppointmentsRequestsView.route: (context) =>
                 AppointmentsRequestsView(
