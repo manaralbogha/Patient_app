@@ -50,6 +50,7 @@ class CustomeTextField extends StatelessWidget {
                   return null;
                 },
             onTap: onTap,
+            maxLines: 6,
             initialValue: initialValue,
             focusNode: disableFocusNode ? AlwaysDisabledFocusNode() : null,
             obscureText: obscureText ?? false,

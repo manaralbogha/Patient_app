@@ -1,15 +1,15 @@
 class AddAppointmentModel {
-  String date;
-  String time;
-  String description;
-  int departmentId;
-  int doctorIid;
+  String? date;
+  String? time;
+  String? description;
+  String? departmentId;
+  String? doctorIid;
 
   AddAppointmentModel({
-    required this.date,
-    required this.time,
-    required this.description,
-    required this.departmentId,
-    required this.doctorIid,
+    this.date,
+    this.time,
+    this.description,
+    this.departmentId,
+    this.doctorIid,
   });
 }
