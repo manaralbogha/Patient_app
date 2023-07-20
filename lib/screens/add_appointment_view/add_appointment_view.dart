@@ -112,8 +112,8 @@ class _DatesListView extends StatelessWidget {
               },
               child: Container(
                 padding: const EdgeInsets.all(5),
-                height: 70.h,
-                width: 80.w,
+                height: 75.h,
+                width: 85.w,
                 decoration: BoxDecoration(
                   color: addAppointmentCubit.selectIndexDay != index
                       ? Colors.white24
@@ -135,7 +135,7 @@ class _DatesListView extends StatelessWidget {
                             fontSize:
                                 addAppointmentCubit.days[index] == 'Wednesday'
                                     ? 13.sp
-                                    : 16.sp),
+                                    : 14.sp),
                       ),
                       Text(
                         addAppointmentCubit.dates[index],
@@ -167,7 +167,7 @@ class _CustomAppBar extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 100.w,
+          width: 90.w,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -178,7 +178,7 @@ class _CustomAppBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50.r),
               ),
               Positioned(
-                right: 32.w,
+                right: 20.w,
                 child: CustomeImage(
                   // image: AppAssets.loginImage,
                   height: 40.h,
