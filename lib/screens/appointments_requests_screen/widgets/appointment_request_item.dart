@@ -45,7 +45,7 @@ class AppointmentRequestItem extends StatelessWidget {
                   SizedBox(width: 5.w),
                   _TextItem(
                     text: 'Dr. Abdullah Nahlawi',
-                    width: 150.w,
+                    width: 125.w,
                   ),
                 ],
               ),
@@ -96,7 +96,7 @@ class _TextItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width ?? 175.w,
+      width: width ?? 150.w,
       child: Text(
         text,
         overflow: TextOverflow.ellipsis,
