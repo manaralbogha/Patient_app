@@ -10,7 +10,7 @@ abstract class GetMyAppointmentsService {
       {required String token}) async {
     try {
       var data =
-          await ApiServices.get(endPoint: 'storeAppointment', token: token);
+          await ApiServices.get(endPoint: 'indexAppointment', token: token);
       List<AppointmentModel> myAppointments = [];
       for (var item in data['Appointment']) {
         myAppointments.add(AppointmentModel.fromJson(item));
