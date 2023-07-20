@@ -5,6 +5,7 @@ import 'package:patient_app/core/styles/app_colors.dart';
 class CustomeImage extends StatelessWidget {
   final String? image;
   final double? height, width;
+  final double? iconSize;
   final BorderRadiusGeometry? borderRadius;
   const CustomeImage({
     super.key,
@@ -12,6 +13,7 @@ class CustomeImage extends StatelessWidget {
     this.height,
     this.width,
     this.borderRadius,
+    this.iconSize,
   });
 
   @override
@@ -30,7 +32,7 @@ class CustomeImage extends StatelessWidget {
           ? null
           : Icon(
               Icons.person,
-              size: 35.sp,
+              size: iconSize ?? 35.sp,
               color: defaultColor,
             ),
     );
