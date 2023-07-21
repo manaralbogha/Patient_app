@@ -8,9 +8,9 @@ import 'package:patient_app/core/widgets/custome_button.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
-import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_cubit.dart';
-import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_states.dart';
-import 'package:patient_app/screens/login_screen/login_screen.dart';
+import '../../../core/widgets/custome_arrow_back_button.dart';
+import 'cubit/add_appointment_cubit.dart';
+import 'cubit/add_appointment_states.dart';
 
 class AddAppointmentView extends StatelessWidget {
   static const route = 'AddAppointmentView';
@@ -21,15 +21,16 @@ class AddAppointmentView extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddAppointmentCubit(),
       child: SafeArea(
-          child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: const Scaffold(
-          backgroundColor: defaultColor,
-          body: AddAppointmentViewBody(),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: const Scaffold(
+            backgroundColor: defaultColor,
+            body: AddAppointmentViewBody(),
+          ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -103,6 +104,7 @@ class _Body extends StatelessWidget {
               color: Colors.white,
             ),
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -163,7 +165,6 @@ class _Body extends StatelessWidget {
 
 class _TimesButtons extends StatelessWidget {
   const _TimesButtons({
-    super.key,
     required this.addAppointmentCubit,
   });
 
@@ -357,26 +358,7 @@ class _CustomAppBar extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Container(
-          height: 30.h,
-          width: 33.w,
-          decoration: BoxDecoration(
-              color: Colors.white12, borderRadius: BorderRadius.circular(50.r)),
-          child: InkWell(
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.r),
-            ),
-            onTap: () {
-              CacheHelper.deletData(key: 'Token');
-              Navigator.popAndPushNamed(context, LoginView.route);
-            },
-            child: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-        )
+        const CustomArrowBackIconButton(),
       ],
     );
   }

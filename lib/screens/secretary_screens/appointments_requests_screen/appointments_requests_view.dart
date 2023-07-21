@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
-import 'package:patient_app/screens/appointments_requests_screen/cubit/appointments_requests_cubit.dart';
-import 'package:patient_app/screens/appointments_requests_screen/cubit/appointments_requests_states.dart';
-import 'package:patient_app/screens/appointments_requests_screen/widgets/appointment_request_item.dart';
+import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
+import 'cubit/appointments_requests_cubit.dart';
+import 'cubit/appointments_requests_states.dart';
 
 class AppointmentsRequestsView extends StatelessWidget {
   static const route = 'AppointmentsRequestsView';

@@ -7,12 +7,14 @@ class CustomeButton extends StatelessWidget {
   final void Function() onPressed;
   final BorderRadiusGeometry? borderRadius;
   final double? width;
+  final EdgeInsetsGeometry? padding;
   const CustomeButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.borderRadius,
     this.width,
+    this.padding,
   });
 
   @override
@@ -20,9 +22,10 @@ class CustomeButton extends StatelessWidget {
     return Container(
       width: width ?? MediaQuery.of(context).size.width * .9,
       height: 50,
-      padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * .1,
-      ),
+      padding: padding ??
+          EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * .1,
+          ),
       child: MaterialButton(
         onPressed: onPressed,
         color: defaultColor,

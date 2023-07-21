@@ -7,6 +7,7 @@ class CustomeImage extends StatelessWidget {
   final double? height, width;
   final double? iconSize;
   final BorderRadiusGeometry? borderRadius;
+  final EdgeInsetsGeometry? margin;
   const CustomeImage({
     super.key,
     this.image,
@@ -14,6 +15,7 @@ class CustomeImage extends StatelessWidget {
     this.width,
     this.borderRadius,
     this.iconSize,
+    this.margin,
   });
 
   @override
@@ -21,6 +23,7 @@ class CustomeImage extends StatelessWidget {
     return Container(
       height: height ?? MediaQuery.of(context).size.height * .25,
       width: width ?? MediaQuery.of(context).size.width * .25,
+      margin: margin,
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: borderRadius,

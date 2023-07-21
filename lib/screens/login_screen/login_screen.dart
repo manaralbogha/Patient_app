@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:patient_app/screens/add_appointment_view/add_appointment_view.dart';
-import 'package:patient_app/screens/appointments_requests_screen/appointments_requests_view.dart';
+import 'package:patient_app/screens/patient_screens/doctor_details_screen/doctor_details_screen.dart';
 import 'package:patient_app/screens/register_screen/register_screen.dart';
-
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
 import '../../core/styles/text_styles.dart';
@@ -16,6 +13,7 @@ import '../../core/widgets/custome_image.dart';
 import '../../core/widgets/custome_progress_indicator.dart';
 import '../../core/widgets/custome_text_field.dart';
 import '../../main.dart';
+import '../secretary_screens/appointments_requests_screen/appointments_requests_view.dart';
 import 'cubit/login_cubit.dart';
 import 'cubit/login_states.dart';
 
@@ -56,7 +54,7 @@ class LoginViewBody extends StatelessWidget {
           if (state.loginModel.role == 'secretary') {
             return AppointmentsRequestsView(token: state.loginModel.token);
           }
-          return const AddAppointmentView();
+          return const DoctorDetailsView();
         } else {
           return _body(context);
         }
@@ -67,7 +65,7 @@ class LoginViewBody extends StatelessWidget {
   Widget _body(context) {
     LoginCubit loginCubit = BlocProvider.of<LoginCubit>(context);
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      // physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -78,18 +76,19 @@ class LoginViewBody extends StatelessWidget {
               width: screenSize.width * .8,
               height: screenSize.height * .3,
             ),
-            SizedBox(height: screenSize.height * .02),
+            // SizedBox(height: screenSize.height * .02),
             Text(
               'Login',
               style: TextStyles.textStyle50,
             ),
-            SizedBox(height: screenSize.height * .02),
+            SizedBox(height: screenSize.height * .015),
             Text(
               'Please Enter Your Credentials To Get Started ...',
-              style: TextStyles.textStyle18,
+              style:
+                  TextStyles.textStyle18.copyWith(fontStyle: FontStyle.italic),
               maxLines: 2,
             ),
-            SizedBox(height: screenSize.height * .06),
+            SizedBox(height: screenSize.height * .05),
             CustomeTextField(
               keyboardType: TextInputType.emailAddress,
               hintText: ' Email ...',
