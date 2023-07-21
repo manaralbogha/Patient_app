@@ -29,3 +29,5 @@ class AddSpecialtyState extends RegisterStates {}
 class SelectTimeState extends RegisterStates {}
 
 class ChangePasswordState extends RegisterStates {}
+
+class SelectBirthDateState extends RegisterStates {}

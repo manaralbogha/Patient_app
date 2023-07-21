@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -153,14 +152,25 @@ class RegisterViewBody extends StatelessWidget {
                     ),
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
-                      hintText: 'Birth Date ...',
+                      hintText:
+                          cubit.registerModel.birthDate ?? 'Birth Date ...',
+                      hintStyle: cubit.registerModel.birthDate != null
+                          ? const TextStyle(color: Colors.black)
+                          : null,
+                      validator: (value) {
+                        if (cubit.registerModel.birthDate == null) {
+                          return 'required';
+                        }
+                        return null;
+                      },
                       iconData: Icons.date_range_rounded,
                       disableFocusNode: true,
                       onTap: () async {
-                        cubit.registerModel.birthDate =
+                        cubit.date =
                             (await CustomDialogs.pickDateDialog(context))
-                                .toString()
-                                .substring(0, 10);
+                                .toString();
+
+                        cubit.selectBirthDate();
                       },
                       suffixIcon: const Icon(
                         Icons.expand_more_sharp,
@@ -183,7 +193,9 @@ class RegisterViewBody extends StatelessWidget {
                     CustomeButton(
                       text: 'Next',
                       onPressed: () {
-                        log(cubit.registerModel.birthDate ?? 'xxx');
+                        if (cubit.formKey.currentState!.validate()) {
+                          cubit.register(context);
+                        }
                       },
                     ),
                     const SizedBox(height: 15),

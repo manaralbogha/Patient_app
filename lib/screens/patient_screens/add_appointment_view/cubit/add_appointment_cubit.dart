@@ -1,10 +1,10 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:patient_app/core/api/services/appointment/add_appointment_service.dart';
-import 'package:patient_app/screens/add_appointment_view/cubit/add_appointment_states.dart';
-
-import '../../../core/models/add_appointment_model.dart';
+import '../../../../core/models/add_appointment_model.dart';
+import 'add_appointment_states.dart';
 
 class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   AddAppointmentCubit() : super(AddAppointmentInitial());
@@ -56,7 +56,7 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
     emit(AddAppointmentInitial());
     selectIndexDay = index;
     addAppointmentModel.date = '${days[index]} ${dates[index]}';
-    print(addAppointmentModel.date);
+    log('${addAppointmentModel.date}');
     emit(SelectDayState());
   }
 
@@ -64,7 +64,7 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
     emit(AddAppointmentInitial());
     selectIndexTime = index;
     addAppointmentModel.time = indexR == 0 ? times1[index] : times2[index];
-    print(addAppointmentModel.time);
+    log('${addAppointmentModel.time}');
     emit(SelectTimeState());
   }
 

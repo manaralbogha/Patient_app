@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/screens/login_screen/login_screen.dart';
-
-import '../../../core/widgets/custome_image.dart';
+import '../../../../core/widgets/custome_image.dart';
 
 class AppointmentRequestItem extends StatelessWidget {
   const AppointmentRequestItem({super.key});

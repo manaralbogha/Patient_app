@@ -34,10 +34,6 @@ abstract class CustomDialogs {
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1930, 1, 1),
       lastDate: DateTime.now(),
-      // onDatePickerModeChange: (value) {
-      //   log('xxxxxxx');
-      //   log(value.toString());
-      // },
     );
   }
 }
