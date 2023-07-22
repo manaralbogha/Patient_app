@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/favourite/add_to_favourite_service.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
+import 'package:patient_app/core/functions/custome_dialogs.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_arrow_back_button.dart';
@@ -128,101 +129,105 @@ class DoctorDetailsViewBody extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.r),
-                topRight: Radius.circular(25.r),
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25.r),
+                  topRight: Radius.circular(25.r),
+                ),
               ),
-            ),
-            height: screenSize.height * .75,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 60.h,
-                    width: screenSize.width,
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Dr. Abdullah Nahlawi',
+              height: screenSize.height * .75,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 60.h,
+                      width: screenSize.width,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Dr. Abdullah Nahlawi',
+                        style: TextStyle(
+                          fontSize: 20.h,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black.withOpacity(.7),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Cardiac Surgery Doctor',
+                        style: TextStyle(
+                          fontSize: 13.h,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black45,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 25.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DoctorDetailsButton(
+                          text: 'Add To Favourite',
+                          icon: Icons.favorite_border,
+                          onPressed: () {
+                            AddToFavouriteService.addToFavourite(
+                              doctorID: 1,
+                              token: CacheHelper.getData(key: 'Token'),
+                            );
+                          },
+                        ),
+                        Container(
+                          color: Colors.grey,
+                          width: 1,
+                          height: 40.h,
+                        ),
+                        DoctorDetailsButton(
+                          text: 'Rating Doctor',
+                          icon: Icons.star_border,
+                          onPressed: () {
+                            CustomDialogs.showRatingDialog(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 25.h),
+                    CustomeButton(
+                      text: 'Appointment Booking',
+                      borderRadius: BorderRadius.circular(10),
+                      width: screenSize.width,
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        Navigator.pushNamed(context, AddAppointmentView.route);
+                      },
+                    ),
+                    SizedBox(height: 25.h),
+                    Text(
+                      'About Doctor',
                       style: TextStyle(
-                        fontSize: 20.h,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black.withOpacity(.7),
+                        fontSize: 15.h,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black.withOpacity(.677),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Cardiac Surgery Doctor',
+                    SizedBox(height: 10.h),
+                    Text(
+                      'Doctorate in Psychiatry Postgraduate degree in Psychiatry\nBeirut University in 1996\nBoard Certified in Psychiatry',
                       style: TextStyle(
-                        fontSize: 13.h,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black45,
+                        fontSize: 12.h,
+                        color: Colors.black.withOpacity(.677),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 25.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DoctorDetailsButton(
-                        text: 'Add To Favourite',
-                        icon: Icons.favorite_border,
-                        onPressed: () {
-                          AddToFavouriteService.addToFavourite(
-                            doctorID: 1,
-                            token: CacheHelper.getData(key: 'Token'),
-                          );
-                        },
-                      ),
-                      Container(
-                        color: Colors.grey,
-                        width: 1,
-                        height: 40.h,
-                      ),
-                      DoctorDetailsButton(
-                        text: 'Rating Doctor',
-                        icon: Icons.star_border,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 25.h),
-                  CustomeButton(
-                    text: 'Appointment Booking',
-                    borderRadius: BorderRadius.circular(10),
-                    width: screenSize.width,
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      Navigator.pushNamed(context, AddAppointmentView.route);
-                    },
-                  ),
-                  SizedBox(height: 25.h),
-                  Text(
-                    'About Doctor',
-                    style: TextStyle(
-                      fontSize: 15.h,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black.withOpacity(.677),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    'Doctorate in Psychiatry Postgraduate degree in Psychiatry\nBeirut University in 1996\nBoard Certified in Psychiatry',
-                    style: TextStyle(
-                      fontSize: 12.h,
-                      color: Colors.black.withOpacity(.677),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
