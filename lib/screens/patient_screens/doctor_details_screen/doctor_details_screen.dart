@@ -10,6 +10,7 @@ import 'package:patient_app/core/widgets/custome_button.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/main.dart';
 import 'package:patient_app/screens/patient_screens/add_appointment_view/add_appointment_view.dart';
+import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
 
 class DoctorDetailsView extends StatelessWidget {
   static const route = 'DoctorDetailsView';
@@ -75,7 +76,9 @@ class DoctorDetailsView extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, ShowAllConsultationView.route);
+                  },
                   highlightColor: defaultColor.withOpacity(.4),
                   borderRadius: BorderRadius.circular(10),
                   child: Text(
