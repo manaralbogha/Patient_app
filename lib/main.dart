@@ -10,15 +10,27 @@ import 'package:patient_app/screens/register_screen/register_screen.dart';
 import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/appointments_requests_view.dart';
 
 void main() async {
+  String initalRoute;
   WidgetsFlutterBinding.ensureInitialized();
   await CacheHelper.init();
-  runApp(const PatientApp());
+
+  if (await CacheHelper.getData(key: 'Token') == null) {
+    initalRoute = LoginView.route;
+  } else if (await CacheHelper.getData(key: 'Role') == 'secretary') {
+    initalRoute = AppointmentsRequestsView.route;
+  } else {
+    initalRoute = DoctorDetailsView.route;
+  }
+  runApp(PatientApp(
+    initialRoute: initalRoute,
+  ));
 }
 
 late Size screenSize;
 
 class PatientApp extends StatelessWidget {
-  const PatientApp({super.key});
+  final String initialRoute;
+  const PatientApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +55,13 @@ class PatientApp extends StatelessWidget {
               ),
             ),
           ),
-          initialRoute: CacheHelper.getData(key: 'Token') == null
-              ? LoginView.route
+          home: CacheHelper.getData(key: 'Token') == null
+              ? const LoginView()
               : CacheHelper.getData(key: 'Role') == 'secretary'
-                  ? AppointmentsRequestsView.route
-                  : DoctorDetailsView.route,
+                  ? AppointmentsRequestsView(
+                      token: CacheHelper.getData(key: 'Token'))
+                  : const DoctorDetailsView(),
+          initialRoute: initialRoute,
           routes: {
             LoginView.route: (context) => const LoginView(),
             RegisterView.route: (context) => const RegisterView(),
