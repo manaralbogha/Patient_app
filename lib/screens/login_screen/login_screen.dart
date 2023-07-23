@@ -116,6 +116,8 @@ class LoginViewBody extends StatelessWidget {
                 text: 'Login',
                 onPressed: () {
                   loginCubit.login();
+                  // CacheHelper.deletData(key: 'Token');
+                  // CacheHelper.deletData(key: 'Role');
                 },
               ),
             ),

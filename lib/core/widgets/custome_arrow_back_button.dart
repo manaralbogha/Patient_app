@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../screens/login_screen/login_screen.dart';
-import '../api/services/local/cache_helper.dart';
-
 class CustomArrowBackIconButton extends StatelessWidget {
   const CustomArrowBackIconButton({super.key});
 
@@ -21,9 +18,7 @@ class CustomArrowBackIconButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(50.r),
         ),
         onTap: () {
-          CacheHelper.deletData(key: 'Token');
-          CacheHelper.deletData(key: 'Role');
-          Navigator.popAndPushNamed(context, LoginView.route);
+          Navigator.pop(context);
         },
         child: const Icon(
           Icons.arrow_forward_ios_outlined,

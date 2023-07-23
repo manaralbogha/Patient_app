@@ -18,7 +18,17 @@ class MyAppointmentsFailure extends MyAppointmentsStates {
 }
 
 class MyAppointmentsSuccess extends MyAppointmentsStates {
-  final List<AppointmentModel> myAppointments;
+  final List<AppointmentModel> appointments;
 
-  const MyAppointmentsSuccess({required this.myAppointments});
+  const MyAppointmentsSuccess({required this.appointments});
+
+  List<AppointmentModel> getMyAppointments({required int patientID}) {
+    List<AppointmentModel> myAppointments = [];
+    for (AppointmentModel item in appointments) {
+      if (patientID == item.patientId) {
+        myAppointments.add(item);
+      }
+    }
+    return myAppointments;
+  }
 }
