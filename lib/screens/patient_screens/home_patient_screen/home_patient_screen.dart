@@ -9,7 +9,6 @@ import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
 import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
-
 import 'cubits/home_cubit/home_patient_cuibt.dart';
 import 'cubits/home_cubit/home_patient_states.dart';
 
@@ -26,7 +25,6 @@ class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -62,44 +60,42 @@ class _HomePatientViewState extends State<HomePatientView> {
                         widget.patientModel?.userModel?.firstName ?? '',
                         style: TextStyle(
                             fontSize: 25.sp, fontWeight: FontWeight.bold),
-
-                        ),
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          appBar: AppBar(),
-          bottomNavigationBar: Theme(
-            data: ThemeData(
-              splashColor: Colors.transparent,
-            ),
-            child: BottomNavigationBar(
-              fixedColor: Colors.purple.shade300,
-              onTap: (value) {
-                setState(() {
-                  _index = value;
-                });
-              },
-              currentIndex: _index,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_sharp),
-                  label: 'Appointments',
+                    ),
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-            ),
+              )
+            ],
           ),
-          body: _index == 1
-              ? const HomePatientViewBody()
-              : const AppointmentsViewBody(),
         ),
+        appBar: AppBar(),
+        bottomNavigationBar: Theme(
+          data: ThemeData(
+            splashColor: Colors.transparent,
+          ),
+          child: BottomNavigationBar(
+            fixedColor: Colors.purple.shade300,
+            onTap: (value) {
+              setState(() {
+                _index = value;
+              });
+            },
+            currentIndex: _index,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_month_sharp),
+                label: 'Appointments',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        ),
+        body: _index == 1
+            ? const HomePatientViewBody()
+            : const AppointmentsViewBody(),
       ),
     );
   }
@@ -140,8 +136,8 @@ class HomePatientViewBody extends StatelessWidget {
                                 // margin: EdgeInsets.all(2),
 
                                 shape: RoundedRectangleBorder(
-                                  side:
-                                      BorderSide(color: Colors.green, width: 2),
+                                  side: const BorderSide(
+                                      color: Colors.green, width: 2),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.r)),
                                 ),
