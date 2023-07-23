@@ -2,10 +2,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/core/api/services/consultation/send_question_service.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/functions/custome_dialogs.dart';
-import 'package:patient_app/core/functions/custome_snack_bar.dart';
 import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
@@ -144,29 +142,34 @@ class DoctorDetailsView extends StatelessWidget {
                   onPressed: () async {
                     log('${doctorModel.id}');
                     if (formKey.currentState!.validate()) {
-                      (await SendQuestionService.sendQuestion(
-                        doctorID: '${doctorModel.id}',
+                      cubit.addConsultation(
+                        context,
+                        doctorID: doctorModel.id,
                         question: question!,
-                        token: CacheHelper.getData(key: 'Token'),
-                      ))
-                          .fold(
-                        (l) {
-                          Navigator.pop(context);
-                          CustomeSnackBar.showSnackBar(
-                            context,
-                            msg: 'Something Went Wrong, Please Try Later',
-                            color: Colors.red,
-                          );
-                        },
-                        (r) {
-                          Navigator.pop(context);
-                          CustomeSnackBar.showSnackBar(
-                            context,
-                            msg: 'Question Send Successfully',
-                            color: Colors.green,
-                          );
-                        },
                       );
+                      // (await SendQuestionService.sendQuestion(
+                      //   doctorID: '${doctorModel.id}',
+                      //   question: question!,
+                      //   token: CacheHelper.getData(key: 'Token'),
+                      // ))
+                      //     .fold(
+                      //   (l) {
+                      //     Navigator.pop(context);
+                      //     CustomeSnackBar.showSnackBar(
+                      //       context,
+                      //       msg: 'Something Went Wrong, Please Try Later',
+                      //       color: Colors.red,
+                      //     );
+                      //   },
+                      //   (r) {
+                      //     Navigator.pop(context);
+                      //     CustomeSnackBar.showSnackBar(
+                      //       context,
+                      //       msg: 'Question Send Successfully',
+                      //       color: Colors.green,
+                      //     );
+                      //   },
+                      // );
                     }
                   },
                 ),
