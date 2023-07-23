@@ -15,7 +15,7 @@ class CustomDoctorItem extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         SizedBox(
-          width: 170.w,
+          width: 200.w,
           child: InkWell(
             onTap: () {
               Navigator.pushNamed(context, DoctorDetailsView.route,
@@ -24,7 +24,7 @@ class CustomDoctorItem extends StatelessWidget {
             highlightColor: defaultColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(15),
             child: Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               surfaceTintColor: Colors.white,
               elevation: 7,
               child: Padding(

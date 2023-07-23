@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_cuibt.dart';
@@ -22,6 +23,7 @@ class _HomePatientViewState extends State<HomePatientView> {
     return BlocProvider(
       create: (context) => HomePatientCubit()..getDoctors(token: ''),
       child: Scaffold(
+        appBar: AppBar(),
         bottomNavigationBar: Theme(
           data: ThemeData(
             splashColor: Colors.transparent,
@@ -70,16 +72,22 @@ class HomePatientViewBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 100,
+                height: 10,
               ),
               Expanded(
-                child: ListView.builder(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      mainAxisExtent: 260.h,
+                      childAspectRatio: 3 / 2,
+                      crossAxisSpacing: 5.w,
+                      mainAxisSpacing: 5.h),
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) => CustomDoctorItem(
                     doctorModel: state.doctors[index],
                   ),
                   itemCount: state.doctors.length,
-                  scrollDirection: Axis.horizontal,
+                  // scrollDirection: Axis.horizontal,
                 ),
               ),
               // const Expanded(child: SizedBox()),
