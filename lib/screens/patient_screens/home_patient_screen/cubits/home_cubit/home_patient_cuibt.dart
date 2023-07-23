@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_states.dart';
-import '../../../../core/api/services/get_doctors_service.dart';
+
+import '../../../../../core/api/services/get_doctors_service.dart';
+import 'home_patient_states.dart';
 
 class HomePatientCubit extends Cubit<HomePatientStates> {
   final String _adminToken =

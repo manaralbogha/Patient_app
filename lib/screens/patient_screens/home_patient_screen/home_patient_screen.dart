@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_cuibt.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_states.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
 import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
 
+import 'cubits/home_cubit/home_patient_cuibt.dart';
+import 'cubits/home_cubit/home_patient_states.dart';
+
 class HomePatientView extends StatefulWidget {
   static const route = 'HomePatientView';
-  const HomePatientView({super.key});
+  final PatientModel? patientModel;
+  const HomePatientView({super.key, this.patientModel});
 
   @override
   State<HomePatientView> createState() => _HomePatientViewState();
@@ -23,38 +26,43 @@ class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomePatientCubit()..getDoctors(token: ''),
-      child: SafeArea(
-        child: Scaffold(
-          drawer: Drawer(
-            width: 250.w,
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 180.h,
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: CustomeImage(
-                          height: 75.h,
-                          width: 80.w,
-                          borderRadius: BorderRadius.circular(50.r),
-                          iconSize: 60.sp,
-                        ),
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomePatientCubit()..getDoctors(token: ''),
+        ),
+      ],
+      child: Scaffold(
+        drawer: Drawer(
+          width: 250.w,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 180.h,
+                color: Colors.white,
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: CustomeImage(
+                        height: 75.h,
+                        width: 80.w,
+                        borderRadius: BorderRadius.circular(50.r),
+                        iconSize: 60.sp,
                       ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Center(
-                        child: Text(
-                          'Manar Albogha',
-                          style: TextStyle(
-                              fontSize: 25.sp, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    Center(
+                      child: Text(
+                        widget.patientModel?.userModel?.firstName ?? '',
+                        style: TextStyle(
+                            fontSize: 25.sp, fontWeight: FontWeight.bold),
+
                         ),
                       ),
                     ],

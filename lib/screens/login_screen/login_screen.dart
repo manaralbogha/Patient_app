@@ -54,7 +54,7 @@ class LoginViewBody extends StatelessWidget {
           if (state.loginModel.role == 'secretary') {
             return AppointmentsRequestsView(token: state.loginModel.token);
           }
-          return const HomePatientView();
+          return HomePatientView(patientModel: state.patientModel);
         } else {
           return _body(context);
         }
