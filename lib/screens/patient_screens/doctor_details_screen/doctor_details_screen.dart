@@ -17,6 +17,8 @@ import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
 
+import '../add_appointment_view/add_appointment_view.dart';
+
 class DoctorDetailsView extends StatelessWidget {
   static const route = 'DoctorDetailsView';
 
@@ -147,29 +149,6 @@ class DoctorDetailsView extends StatelessWidget {
                         doctorID: doctorModel.id,
                         question: question!,
                       );
-                      // (await SendQuestionService.sendQuestion(
-                      //   doctorID: '${doctorModel.id}',
-                      //   question: question!,
-                      //   token: CacheHelper.getData(key: 'Token'),
-                      // ))
-                      //     .fold(
-                      //   (l) {
-                      //     Navigator.pop(context);
-                      //     CustomeSnackBar.showSnackBar(
-                      //       context,
-                      //       msg: 'Something Went Wrong, Please Try Later',
-                      //       color: Colors.red,
-                      //     );
-                      //   },
-                      //   (r) {
-                      //     Navigator.pop(context);
-                      //     CustomeSnackBar.showSnackBar(
-                      //       context,
-                      //       msg: 'Question Send Successfully',
-                      //       color: Colors.green,
-                      //     );
-                      //   },
-                      // );
                     }
                   },
                 ),
@@ -339,12 +318,11 @@ class _Body extends StatelessWidget {
                           width: screenSize.width,
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            // Navigator.pushNamed(
-                            //   context,
-                            //   AddAppointmentView.route,
-                            //   arguments: doctorModel,
-                            // );
-                            log('${cubit.visible}');
+                            Navigator.pushNamed(
+                              context,
+                              AddAppointmentView.route,
+                              arguments: doctorModel,
+                            );
                           },
                         ),
                         SizedBox(height: 25.h),

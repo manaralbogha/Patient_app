@@ -7,6 +7,7 @@ import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/cubits/my_appointments_cubit/my_appointments_cubit.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
 import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
 import 'cubits/home_cubit/home_patient_cuibt.dart';
@@ -23,86 +24,137 @@ class HomePatientView extends StatefulWidget {
 
 class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomePatientCubit()..getDoctors(token: ''),
+          create: (context) => HomePatientCubit(),
+        ),
+        BlocProvider(
+          create: (context) => MyAppointmentsCubit()..getMyAppointments(),
         ),
       ],
-      child: Scaffold(
-        drawer: Drawer(
-          width: 250.w,
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 180.h,
-                color: Colors.white,
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: CustomeImage(
-                        height: 75.h,
-                        width: 80.w,
-                        borderRadius: BorderRadius.circular(50.r),
-                        iconSize: 60.sp,
-                      ),
+      child: BlocBuilder<HomePatientCubit, HomePatientStates>(
+        builder: (context, state) {
+          HomePatientCubit homeCubit =
+              BlocProvider.of<HomePatientCubit>(context);
+          MyAppointmentsCubit appointmentsCubit =
+              BlocProvider.of<MyAppointmentsCubit>(context);
+          return Scaffold(
+            key: _scaffoldKey,
+            drawer: Drawer(
+              width: 250.w,
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 180.h,
+                    color: Colors.transparent,
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: CustomeImage(
+                            height: 75.h,
+                            width: 80.w,
+                            borderRadius: BorderRadius.circular(50.r),
+                            iconSize: 60.sp,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Center(
+                          child: Text(
+                            widget.patientModel?.userModel?.firstName ?? '',
+                            style: TextStyle(
+                                fontSize: 25.sp, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 30.h,
+                  ),
+                  const Expanded(child: SizedBox()),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(elevation: 0),
+                    onPressed: () {
+                      _scaffoldKey.currentState!.closeDrawer();
+                      homeCubit.logout(context);
+                    },
+                    icon: Icon(
+                      Icons.logout,
+                      size: 25.w,
+                      color: Colors.red,
                     ),
-                    Center(
-                      child: Text(
-                        widget.patientModel?.userModel?.firstName ?? '',
-                        style: TextStyle(
-                            fontSize: 25.sp, fontWeight: FontWeight.bold),
-                      ),
+                    label: Text(
+                      'Log Out',
+                      style: TextStyle(fontSize: 20.w, color: Colors.black54),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            appBar: AppBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20.r),
                 ),
-              )
-            ],
-          ),
-        ),
-        appBar: AppBar(),
-        bottomNavigationBar: Theme(
-          data: ThemeData(
-            splashColor: Colors.transparent,
-          ),
-          child: BottomNavigationBar(
-            fixedColor: Colors.purple.shade300,
-            onTap: (value) {
-              setState(() {
-                _index = value;
-              });
-            },
-            currentIndex: _index,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_sharp),
-                label: 'Appointments',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
+              title: Text(
+                'Welcom ${widget.patientModel!.userModel!.firstName}',
+                style: TextStyle(fontSize: 20.w),
               ),
-            ],
-          ),
-        ),
-        body: _index == 1
-            ? const HomePatientViewBody()
-            : const AppointmentsViewBody(),
+              actions: const [
+                Icon(Icons.notifications),
+                SizedBox(width: 5),
+              ],
+            ),
+            bottomNavigationBar: Theme(
+              data: ThemeData(
+                splashColor: Colors.transparent,
+              ),
+              child: BottomNavigationBar(
+                fixedColor: Colors.purple.shade300,
+                onTap: (value) {
+                  setState(() {
+                    if (value == 1) {
+                      homeCubit.getDoctors(token: '');
+                    } else {
+                      appointmentsCubit.getMyAppointments();
+                    }
+                    _index = value;
+                  });
+                },
+                currentIndex: _index,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_month_sharp),
+                    label: 'Appointments',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Profile',
+                  ),
+                ],
+              ),
+            ),
+            body: _index == 1
+                ? HomePatientViewBody(patientModel: widget.patientModel)
+                : AppointmentsViewBody(patientModel: widget.patientModel),
+          );
+        },
       ),
     );
   }
 }
 
 class HomePatientViewBody extends StatelessWidget {
-  const HomePatientViewBody({super.key});
+  final PatientModel? patientModel;
+  const HomePatientViewBody({super.key, this.patientModel});
 
   @override
   Widget build(BuildContext context) {
@@ -112,8 +164,9 @@ class HomePatientViewBody extends StatelessWidget {
           return const CustomeProgressIndicator();
         } else if (state is HomePatientFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
-        } else if (state is HomePatientSuccess) {
+        } else if (state is GetDoctorsSuccess) {
           return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
@@ -123,6 +176,7 @@ class HomePatientViewBody extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       height: 150.h,
                       child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: 20,
                         itemBuilder: (context, index) {
@@ -156,7 +210,7 @@ class HomePatientViewBody extends StatelessWidget {
                                       height: 10.h,
                                     ),
                                     const Text(
-                                      "Manar Albogha",
+                                      "Public Department",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -204,12 +258,29 @@ class HomePatientViewBody extends StatelessWidget {
 }
 
 class AppointmentsViewBody extends StatelessWidget {
-  const AppointmentsViewBody({super.key});
+  final PatientModel? patientModel;
+  const AppointmentsViewBody({super.key, this.patientModel});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: AppointmentRequestItem(),
+    return BlocBuilder<MyAppointmentsCubit, MyAppointmentsStates>(
+      builder: (context, state) {
+        if (state is MyAppointmentsLoading) {
+          return const CustomeProgressIndicator();
+        } else if (state is MyAppointmentsFailure) {
+          return CustomeErrorWidget(errorMsg: state.failureMsg);
+        } else if (state is MyAppointmentsSuccess) {
+          return ListView.builder(
+            itemBuilder: (context, index) => const AppointmentRequestItem(),
+            itemCount:
+                state.getMyAppointments(patientID: patientModel!.id!).length,
+          );
+        } else {
+          return const Center(
+            child: Text('Initial'),
+          );
+        }
+      },
     );
   }
 }
