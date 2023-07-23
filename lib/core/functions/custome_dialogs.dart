@@ -37,7 +37,10 @@ abstract class CustomDialogs {
     );
   }
 
-  static showRatingDialog(BuildContext context) {
+  static void showRatingDialog(
+    BuildContext context, {
+    required void Function() onPressed,
+  }) {
     showDialog(
       context: context,
       builder: (context) {
@@ -46,17 +49,24 @@ abstract class CustomDialogs {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * .28,
-            child: const CustomeRatingView(),
+            child: CustomeRatingView(
+              onPressed: onPressed,
+            ),
           ),
         );
       },
     );
   }
+
+  static int? helperGetRatingIndex() => CustomeRatingView.ratingValue;
 }
 
 class CustomeRatingView extends StatefulWidget {
+  final void Function() onPressed;
+  static int? ratingValue;
   const CustomeRatingView({
     super.key,
+    required this.onPressed,
   });
 
   @override
@@ -94,6 +104,7 @@ class _CustomeRatingViewState extends State<CustomeRatingView> {
                   onPressed: () {
                     setState(() {
                       ratingIndex = index + 1;
+                      CustomeRatingView.ratingValue = ratingIndex;
                     });
                   },
                   icon: index < ratingIndex
@@ -114,7 +125,7 @@ class _CustomeRatingViewState extends State<CustomeRatingView> {
           const SizedBox(height: 5),
           CustomeButton(
             text: 'Submit',
-            onPressed: () async {},
+            onPressed: widget.onPressed,
             width: MediaQuery.of(context).size.width * .5,
           ),
         ],

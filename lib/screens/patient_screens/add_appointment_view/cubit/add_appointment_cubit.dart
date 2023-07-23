@@ -15,6 +15,7 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   int? selectIndexTime;
   AddAppointmentModel addAppointmentModel = AddAppointmentModel();
   final discretionController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   List<String> times1 = [
     '10:00 AM',
@@ -38,10 +39,10 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
     days.clear();
     var jiffy = Jiffy.now();
 
-    dates.add(jiffy.format(pattern: 'MMM  dd'));
-    days.add(jiffy.EEEE);
+    // dates.add(jiffy.format(pattern: 'MMM  dd'));
+    // days.add(jiffy.EEEE);
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 32; i++) {
       jiffy = jiffy.add(days: 1);
       dates.add(jiffy.format(pattern: 'MMM  dd'));
       days.add(jiffy.EEEE);
@@ -69,8 +70,12 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   }
 
   Future<void> addAppointment(
-      {required AddAppointmentModel addAppointmentModel,
+      {required int doctorID,
+      required int departmentID,
       required String token}) async {
+    addAppointmentModel.description = discretionController.text;
+    addAppointmentModel.doctorIid = '$doctorID';
+    addAppointmentModel.departmentId = '$departmentID';
     emit(AddAppointmentLodgingState());
     (await AddAppointmentService.addAppointment(
             token: token, addAppointmentModel: addAppointmentModel))

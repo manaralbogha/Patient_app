@@ -9,51 +9,68 @@ class AppointmentRequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(10),
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomeImage(
-            borderRadius: BorderRadius.circular(10),
-            width: 70.h,
-            height: 85.h,
-          ),
-          SizedBox(
-            width: 10.w,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const _TextItem(text: 'From: Abdullah Nahlawi xxxxxxxxx'),
-              SizedBox(height: 8.w),
-              const _TextItem(text: 'Sunday 5/7  03:00 PM'),
-              SizedBox(height: 8.w),
-              Row(
-                children: [
-                  CustomeImage(
-                    width: 20.h,
-                    height: 20.h,
-                    iconSize: 15.h,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  SizedBox(width: 5.w),
-                  _TextItem(
-                    text: 'Dr. Abdullah Nahlawi',
-                    width: 125.w,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const _HandleButton(),
-        ],
+      onPressed: () {},
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomeImage(
+              borderRadius: BorderRadius.circular(10),
+              width: 90.h,
+              height: 125.h,
+            ),
+            SizedBox(
+              width: 10.w,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _TextItem(text: 'From: Abdullah Nahlawi xxxxxxxxx'),
+                SizedBox(height: 8.w),
+                const _TextItem(text: 'Time: Sunday 5/7  03:00 PM'),
+                SizedBox(height: 8.w),
+                Row(
+                  children: [
+                    CustomeImage(
+                      width: 20.h,
+                      height: 20.h,
+                      iconSize: 15.h,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    SizedBox(width: 5.w),
+                    _TextItem(
+                      text: 'To: Dr. Abdullah Nahlawi',
+                      width: 195.w,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.w),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(width: 160.w),
+                    const _HandleButton(),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -101,7 +118,7 @@ class _TextItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width ?? 150.w,
+      width: width ?? 220.w,
       child: Text(
         text,
         overflow: TextOverflow.ellipsis,
