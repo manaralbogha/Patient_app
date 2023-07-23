@@ -36,7 +36,7 @@ class DoctorDetailsView extends StatelessWidget {
             tooltip: 'Add a consultation',
             onPressed: () {
               // BlocProvider.of<DoctorDetailsCubit>(context).visible =
-              //     !BlocProvider.of<DoctorDetailsCubit>(context).visible;
+              //     BlocProvider.of<DoctorDetailsCubit>(context).visible;
               _showBottomSheet(
                 context,
                 doctorModel: doctorModel,

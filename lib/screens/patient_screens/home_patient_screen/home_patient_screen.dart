@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/models/patient_model.dart';
+import 'package:patient_app/core/styles/app_colors.dart';
+import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
@@ -24,6 +26,7 @@ class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -59,42 +62,44 @@ class _HomePatientViewState extends State<HomePatientView> {
                         widget.patientModel?.userModel?.firstName ?? '',
                         style: TextStyle(
                             fontSize: 25.sp, fontWeight: FontWeight.bold),
+
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          appBar: AppBar(),
+          bottomNavigationBar: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+              fixedColor: Colors.purple.shade300,
+              onTap: (value) {
+                setState(() {
+                  _index = value;
+                });
+              },
+              currentIndex: _index,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_month_sharp),
+                  label: 'Appointments',
                 ),
-              )
-            ],
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+            ),
           ),
+          body: _index == 1
+              ? const HomePatientViewBody()
+              : const AppointmentsViewBody(),
         ),
-        appBar: AppBar(),
-        bottomNavigationBar: Theme(
-          data: ThemeData(
-            splashColor: Colors.transparent,
-          ),
-          child: BottomNavigationBar(
-            fixedColor: Colors.purple.shade300,
-            onTap: (value) {
-              setState(() {
-                _index = value;
-              });
-            },
-            currentIndex: _index,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month_sharp),
-                label: 'Appointments',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-          ),
-        ),
-        body: _index == 1
-            ? const HomePatientViewBody()
-            : const AppointmentsViewBody(),
       ),
     );
   }
@@ -112,13 +117,71 @@ class HomePatientViewBody extends StatelessWidget {
         } else if (state is HomePatientFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is HomePatientSuccess) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 10,
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 150.h,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 20,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            width: 130.w,
+                            child: InkWell(
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(10.r),
+                              splashColor: defaultColor,
+                              child: Card(
+                                // margin: EdgeInsets.all(2),
+
+                                shape: RoundedRectangleBorder(
+                                  side:
+                                      BorderSide(color: Colors.green, width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.r)),
+                                ),
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    CustomeImage(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10.r),
+                                          topRight: Radius.circular(10.r)),
+                                      image: AppAssets.stethoscope,
+                                      width: double.infinity,
+                                      height: 90.h,
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    const Text(
+                                      "Manar Albogha",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+
+                    // const Expanded(child: SizedBox()),
+                  ],
+                ),
               ),
-              Expanded(
+              SliverFillRemaining(
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200,
@@ -126,7 +189,7 @@ class HomePatientViewBody extends StatelessWidget {
                       childAspectRatio: 3 / 2,
                       crossAxisSpacing: 5.w,
                       mainAxisSpacing: 5.h),
-                  physics: const BouncingScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) => CustomDoctorItem(
                     doctorModel: state.doctors[index],
                   ),
@@ -134,7 +197,6 @@ class HomePatientViewBody extends StatelessWidget {
                   // scrollDirection: Axis.horizontal,
                 ),
               ),
-              // const Expanded(child: SizedBox()),
             ],
           );
         } else {
