@@ -37,9 +37,13 @@ class DoctorDetailsView extends StatelessWidget {
           builder: (context, state) => FloatingActionButton(
             tooltip: 'Add a consultation',
             onPressed: () {
-              BlocProvider.of<DoctorDetailsCubit>(context).visible =
-                  !BlocProvider.of<DoctorDetailsCubit>(context).visible;
-              _showBottomSheet(context, doctorModel: doctorModel);
+              // BlocProvider.of<DoctorDetailsCubit>(context).visible =
+              //     !BlocProvider.of<DoctorDetailsCubit>(context).visible;
+              _showBottomSheet(
+                context,
+                doctorModel: doctorModel,
+                cubit: BlocProvider.of<DoctorDetailsCubit>(context),
+              );
             },
             child: const Icon(
               Icons.chat,
@@ -52,7 +56,7 @@ class DoctorDetailsView extends StatelessWidget {
   }
 
   void _showBottomSheet(BuildContext context,
-      {required DoctorModel doctorModel}) {
+      {required DoctorModel doctorModel, required DoctorDetailsCubit cubit}) {
     final formKey = GlobalKey<FormState>();
     String? question;
     showModalBottomSheet(
@@ -68,8 +72,7 @@ class DoctorDetailsView extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
-            BlocProvider.of<DoctorDetailsCubit>(context)
-                .udpateImageState(visibility: true);
+            cubit.udpateImageState(visibility: true);
           },
           child: Padding(
             padding: EdgeInsets.only(
@@ -122,8 +125,7 @@ class DoctorDetailsView extends StatelessWidget {
                       return null;
                     },
                     onChanged: (value) => question = value,
-                    onTap: () => BlocProvider.of<DoctorDetailsCubit>(context)
-                        .udpateImageState(visibility: false),
+                    onTap: () => cubit.udpateImageState(visibility: false),
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
