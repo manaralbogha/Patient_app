@@ -22,6 +22,12 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
   bool visible = true;
   DoctorDetailsCubit() : super(DoctorDetailsInitial());
 
+  void udpateImageState({required bool visibility}) {
+    emit(UpdateImageState());
+    visible = visibility;
+    emit(DoctorDetailsInitial());
+  }
+
   Future<void> addToFavourite(
       {required int doctorID, required String token}) async {
     emit(DoctorDetailsLoading());
