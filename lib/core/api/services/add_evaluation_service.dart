@@ -14,8 +14,8 @@ abstract class AddEvaluationService {
       await ApiServices.post(
         endPoint: 'evaluation/store',
         body: {
-          'doctor_id': doctorID,
-          'value': value,
+          'doctor_id': '$doctorID',
+          'value': '$value',
         },
         token: token,
       );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
+import 'package:patient_app/core/functions/custome_snack_bar.dart';
+import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/styles/text_styles.dart';
 import 'package:patient_app/core/widgets/custome_button.dart';
@@ -18,6 +20,8 @@ class AddAppointmentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DoctorModel doctorModel =
+        ModalRoute.of(context)!.settings.arguments as DoctorModel;
     return BlocProvider(
       create: (context) => AddAppointmentCubit(),
       child: SafeArea(
@@ -25,9 +29,9 @@ class AddAppointmentView extends StatelessWidget {
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: const Scaffold(
+          child: Scaffold(
             backgroundColor: defaultColor,
-            body: AddAppointmentViewBody(),
+            body: AddAppointmentViewBody(doctorModel: doctorModel),
           ),
         ),
       ),
@@ -36,7 +40,8 @@ class AddAppointmentView extends StatelessWidget {
 }
 
 class AddAppointmentViewBody extends StatelessWidget {
-  const AddAppointmentViewBody({super.key});
+  final DoctorModel doctorModel;
+  const AddAppointmentViewBody({super.key, required this.doctorModel});
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +54,14 @@ class AddAppointmentViewBody extends StatelessWidget {
         } else if (state is AddAppointmentSuccessState) {
           return _Body(
             key: key,
+            doctorModel: doctorModel,
           );
         } else if (state is AddAppointmentLodgingState) {
           return const CustomeProgressIndicator();
         } else {
           return _Body(
             key: key,
+            doctorModel: doctorModel,
           );
         }
       },
@@ -63,15 +70,16 @@ class AddAppointmentViewBody extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
+  final DoctorModel doctorModel;
   const _Body({
     super.key,
+    required this.doctorModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    AddAppointmentCubit addAppointmentCubit =
-        BlocProvider.of<AddAppointmentCubit>(context);
-    addAppointmentCubit.createDatesList();
+    AddAppointmentCubit cubit = BlocProvider.of<AddAppointmentCubit>(context);
+    cubit.createDatesList();
     return Column(
       children: [
         SizedBox(
@@ -85,7 +93,7 @@ class _Body extends StatelessWidget {
                 _CustomAppBar(key: key),
                 const Spacer(),
                 _DatesListView(
-                  addAppointmentCubit: addAppointmentCubit,
+                  addAppointmentCubit: cubit,
                   key: key,
                 )
               ],
@@ -109,20 +117,30 @@ class _Body extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    _TimesButtons(addAppointmentCubit: addAppointmentCubit),
+                    _TimesButtons(addAppointmentCubit: cubit),
                     SizedBox(
                       height: 10.h,
                     ),
-                    TextFormField(
-                      maxLines: 3,
-                      controller: addAppointmentCubit.discretionController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.r),
+                    Form(
+                      key: cubit.formKey,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'required';
+                          }
+                          return null;
+                        },
+                        maxLines: 3,
+                        controller: cubit.discretionController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          hintText: "Description . . .",
+                          hintStyle: TextStyle(
+                              fontSize: 20,
+                              color: defaultColor.withOpacity(.6)),
                         ),
-                        hintText: "Description . . .",
-                        hintStyle: TextStyle(
-                            fontSize: 20, color: defaultColor.withOpacity(.6)),
                       ),
                     ),
                     SizedBox(
@@ -130,24 +148,27 @@ class _Body extends StatelessWidget {
                     ),
                     CustomeButton(
                       onPressed: () {
-                        if (addAppointmentCubit.addAppointmentModel.date != null &&
-                            addAppointmentCubit.addAppointmentModel.time !=
-                                null &&
-                            addAppointmentCubit.discretionController.text !=
-                                '') {
-                          addAppointmentCubit.addAppointmentModel.description =
-                              addAppointmentCubit.discretionController.text;
-                          addAppointmentCubit.addAppointmentModel.departmentId =
-                              "1";
-                          addAppointmentCubit.addAppointmentModel.doctorIid =
-                              "1";
-
-                          addAppointmentCubit.addAppointment(
-                            token: CacheHelper.getData(key: 'Token'),
-                            addAppointmentModel:
-                                addAppointmentCubit.addAppointmentModel,
-                          );
-                        } else {}
+                        if (cubit.formKey.currentState!.validate()) {
+                          if (cubit.addAppointmentModel.date == null) {
+                            CustomeSnackBar.showSnackBar(
+                              context,
+                              msg: 'Please Select a Day',
+                              color: Colors.red,
+                            );
+                          } else if (cubit.addAppointmentModel.time == null) {
+                            CustomeSnackBar.showSnackBar(
+                              context,
+                              msg: 'Please Select a Time',
+                              color: Colors.red,
+                            );
+                          } else {
+                            cubit.addAppointment(
+                              token: CacheHelper.getData(key: 'Token'),
+                              departmentID: doctorModel.departmentID,
+                              doctorID: doctorModel.id,
+                            );
+                          }
+                        }
                       },
                       text: 'ADD',
                       width: double.infinity,

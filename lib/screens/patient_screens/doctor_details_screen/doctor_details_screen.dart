@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/functions/custome_dialogs.dart';
+import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_arrow_back_button.dart';
@@ -16,17 +17,19 @@ import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
 
-
 class DoctorDetailsView extends StatelessWidget {
   static const route = 'DoctorDetailsView';
+
   const DoctorDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final DoctorModel doctorModel =
+        ModalRoute.of(context)?.settings.arguments as DoctorModel;
     return BlocProvider(
       create: (context) => DoctorDetailsCubit(),
       child: Scaffold(
-        body: const DoctorDetailsViewBody(),
+        body: DoctorDetailsViewBody(doctorModel: doctorModel),
         floatingActionButton: FloatingActionButton(
           tooltip: 'Add a consultation',
           onPressed: () {
@@ -123,7 +126,8 @@ class DoctorDetailsView extends StatelessWidget {
 }
 
 class DoctorDetailsViewBody extends StatelessWidget {
-  const DoctorDetailsViewBody({super.key});
+  final DoctorModel doctorModel;
+  const DoctorDetailsViewBody({super.key, required this.doctorModel});
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +138,7 @@ class DoctorDetailsViewBody extends StatelessWidget {
         } else if (state is DoctorDetaisFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else {
-          return const _Body();
+          return _Body(doctorModel: doctorModel);
         }
       },
     );
@@ -142,7 +146,8 @@ class DoctorDetailsViewBody extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body();
+  final DoctorModel doctorModel;
+  const _Body({required this.doctorModel});
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +189,7 @@ class _Body extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Dr. Abdullah Nahlawi',
+                            'Dr. ${doctorModel.user.firstName} ${doctorModel.user.lastName}',
                             style: TextStyle(
                               fontSize: 20.h,
                               fontWeight: FontWeight.w500,
@@ -204,6 +209,17 @@ class _Body extends StatelessWidget {
                             ),
                           ),
                         ),
+                        SizedBox(height: 5.h),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '(${doctorModel.review}) ⭐️',
+                            style: TextStyle(
+                              fontSize: 15.h,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 25.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +230,7 @@ class _Body extends StatelessWidget {
                               onPressed: () {
                                 if (cubit.favouriteText == 'Add To Favourite') {
                                   cubit.addToFavourite(
-                                    doctorID: 1,
+                                    doctorID: doctorModel.id,
                                     token: CacheHelper.getData(key: 'Token'),
                                   );
                                 } else {
@@ -238,7 +254,18 @@ class _Body extends StatelessWidget {
                                 size: 30.w,
                               ),
                               onPressed: () {
-                                CustomDialogs.showRatingDialog(context);
+                                CustomDialogs.showRatingDialog(
+                                  context,
+                                  onPressed: () {
+                                    cubit.ratingValue =
+                                        CustomDialogs.helperGetRatingIndex();
+                                    Navigator.pop(context);
+                                    cubit.addEvaluation(
+                                      doctorID: doctorModel.id,
+                                      token: CacheHelper.getData(key: 'Token'),
+                                    );
+                                  },
+                                );
                               },
                             ),
                           ],
@@ -251,7 +278,10 @@ class _Body extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, AddAppointmentView.route);
+                              context,
+                              AddAppointmentView.route,
+                              arguments: doctorModel,
+                            );
                           },
                         ),
                         SizedBox(height: 25.h),
@@ -265,7 +295,8 @@ class _Body extends StatelessWidget {
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          'Doctorate in Psychiatry Postgraduate degree in Psychiatry\nBeirut University in 1996\nBoard Certified in Psychiatry',
+                          doctorModel.description,
+                          // 'Doctorate in Psychiatry Postgraduate degree in Psychiatry\nBeirut University in 1996\nBoard Certified in Psychiatry',
                           style: TextStyle(
                             fontSize: 12.h,
                             color: Colors.black.withOpacity(.677),
