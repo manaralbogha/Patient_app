@@ -1,8 +1,11 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/api/services/consultation/send_question_service.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/functions/custome_dialogs.dart';
+import 'package:patient_app/core/functions/custome_snack_bar.dart';
 import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
@@ -30,21 +33,29 @@ class DoctorDetailsView extends StatelessWidget {
       create: (context) => DoctorDetailsCubit(),
       child: Scaffold(
         body: DoctorDetailsViewBody(doctorModel: doctorModel),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'Add a consultation',
-          onPressed: () {
-            _showBottomSheet(context);
-          },
-          child: const Icon(
-            Icons.chat,
-            color: defaultColor,
+        floatingActionButton:
+            BlocBuilder<DoctorDetailsCubit, DoctorDetailsStates>(
+          builder: (context, state) => FloatingActionButton(
+            tooltip: 'Add a consultation',
+            onPressed: () {
+              BlocProvider.of<DoctorDetailsCubit>(context).visible =
+                  !BlocProvider.of<DoctorDetailsCubit>(context).visible;
+              _showBottomSheet(context, doctorModel: doctorModel);
+            },
+            child: const Icon(
+              Icons.chat,
+              color: defaultColor,
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context,
+      {required DoctorModel doctorModel}) {
+    final formKey = GlobalKey<FormState>();
+    String? question;
     showModalBottomSheet(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -98,22 +109,59 @@ class DoctorDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      hintStyle: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black.withOpacity(.3),
-                      ),
-                      hintText: 'Enter Your Question ...'),
-                  maxLines: 5,
-                  autofocus: true,
+                Form(
+                  key: formKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'required';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) => question = value,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        hintStyle: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black.withOpacity(.3),
+                        ),
+                        hintText: 'Enter Your Question ...'),
+                    maxLines: 5,
+                    autofocus: true,
+                  ),
                 ),
                 SizedBox(height: 10.h),
                 CustomeButton(
                   text: 'Send Consultation',
-                  onPressed: () {},
+                  onPressed: () async {
+                    log('${doctorModel.id}');
+                    if (formKey.currentState!.validate()) {
+                      (await SendQuestionService.sendQuestion(
+                        doctorID: '${doctorModel.id}',
+                        question: question!,
+                        token: CacheHelper.getData(key: 'Token'),
+                      ))
+                          .fold(
+                        (l) {
+                          Navigator.pop(context);
+                          CustomeSnackBar.showSnackBar(
+                            context,
+                            msg: 'Something Went Wrong, Please Try Later',
+                            color: Colors.red,
+                          );
+                        },
+                        (r) {
+                          Navigator.pop(context);
+                          CustomeSnackBar.showSnackBar(
+                            context,
+                            msg: 'Question Send Successfully',
+                            color: Colors.green,
+                          );
+                        },
+                      );
+                    }
+                  },
                 ),
                 SizedBox(height: 10.h),
               ],
@@ -121,7 +169,8 @@ class DoctorDetailsView extends StatelessWidget {
           ),
         );
       },
-    );
+    ).whenComplete(() => BlocProvider.of<DoctorDetailsCubit>(context).visible =
+        !BlocProvider.of<DoctorDetailsCubit>(context).visible);
   }
 }
 
@@ -159,6 +208,7 @@ class _Body extends StatelessWidget {
             CustomeImage(
               image: AppAssets.stethoscope,
               width: screenSize.width,
+              height: screenSize.height * .33,
             ),
             Positioned(
               left: screenSize.width * .85,
@@ -213,7 +263,7 @@ class _Body extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            '(${doctorModel.review}) ⭐️',
+                            '(${doctorModel.review}.0 / 5) ⭐️',
                             style: TextStyle(
                               fontSize: 15.h,
                               color: Colors.grey,
@@ -308,17 +358,20 @@ class _Body extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              children: [
-                const Expanded(child: SizedBox()),
-                CustomeImage(
-                  borderRadius: BorderRadius.circular(50.h),
-                  margin: EdgeInsets.only(top: screenSize.height * .16),
-                  height: 100.h,
-                  width: 95.h,
-                ),
-                const Expanded(child: SizedBox()),
-              ],
+            Visibility(
+              visible: cubit.visible,
+              child: Row(
+                children: [
+                  const Expanded(child: SizedBox()),
+                  CustomeImage(
+                    borderRadius: BorderRadius.circular(50.h),
+                    margin: EdgeInsets.only(top: screenSize.height * .16),
+                    height: 100.h,
+                    width: 95.h,
+                  ),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
             ),
           ],
         );

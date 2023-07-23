@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../styles/app_colors.dart';
 import '../styles/text_styles.dart';
 
@@ -9,7 +8,7 @@ abstract class CustomeSnackBar {
       {required String msg, Duration? duration, Color? color = defaultColor}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        margin: EdgeInsets.only(bottom: 570.h, left: 10.w, right: 10.w),
+        margin: EdgeInsets.only(bottom: 520.h, left: 10.w, right: 10.w),
         duration: duration ?? const Duration(milliseconds: 4000),
         content: Text(
           msg,

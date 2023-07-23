@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import '../../../core/api/services/login_service.dart';
 import 'login_states.dart';
 
@@ -16,7 +19,11 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(LoginLoading());
     (await LoginService.login(email: email, password: password)).fold(
       (failure) => emit(LoginFailure(failureMsg: failure.errorMessege)),
-      (loginModel) => emit(LoginSuccess(loginModel: loginModel)),
+      (loginModel) {
+        loginModel.id = int.parse(JwtDecoder.decode(loginModel.token)['sub']);
+        emit(LoginSuccess(loginModel: loginModel));
+        log('\n UserID = ${loginModel.id}');
+      },
     );
   }
 

@@ -86,7 +86,7 @@ class HomePatientViewBody extends StatelessWidget {
             ],
           );
         } else {
-          return const Text('Initial');
+          return const Center(child: Text('Initial'));
         }
       },
     );
