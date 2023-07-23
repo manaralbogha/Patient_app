@@ -111,12 +111,12 @@ class _CustomeRatingViewState extends State<CustomeRatingView> {
                       ? Icon(
                           Icons.star,
                           color: Colors.yellow.shade600,
-                          size: 37.w,
+                          size: 33.w,
                         )
                       : Icon(
                           Icons.star_border,
                           color: Colors.yellow.shade600,
-                          size: 37.w,
+                          size: 33.w,
                         ),
                 );
               },
