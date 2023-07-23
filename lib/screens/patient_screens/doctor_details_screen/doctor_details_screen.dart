@@ -15,7 +15,6 @@ import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/main.dart';
-import 'package:patient_app/screens/patient_screens/add_appointment_view/add_appointment_view.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_cubit.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
@@ -67,7 +66,11 @@ class DoctorDetailsView extends StatelessWidget {
       context: context,
       builder: (context) {
         return GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            BlocProvider.of<DoctorDetailsCubit>(context)
+                .udpateImageState(visibility: true);
+          },
           child: Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -119,6 +122,8 @@ class DoctorDetailsView extends StatelessWidget {
                       return null;
                     },
                     onChanged: (value) => question = value,
+                    onTap: () => BlocProvider.of<DoctorDetailsCubit>(context)
+                        .udpateImageState(visibility: false),
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -128,7 +133,7 @@ class DoctorDetailsView extends StatelessWidget {
                         ),
                         hintText: 'Enter Your Question ...'),
                     maxLines: 5,
-                    autofocus: true,
+                    autofocus: false,
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -169,8 +174,10 @@ class DoctorDetailsView extends StatelessWidget {
           ),
         );
       },
-    ).whenComplete(() => BlocProvider.of<DoctorDetailsCubit>(context).visible =
-        !BlocProvider.of<DoctorDetailsCubit>(context).visible);
+    ).whenComplete(
+      () => BlocProvider.of<DoctorDetailsCubit>(context)
+          .udpateImageState(visibility: true),
+    );
   }
 }
 
@@ -327,11 +334,12 @@ class _Body extends StatelessWidget {
                           width: screenSize.width,
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              AddAppointmentView.route,
-                              arguments: doctorModel,
-                            );
+                            // Navigator.pushNamed(
+                            //   context,
+                            //   AddAppointmentView.route,
+                            //   arguments: doctorModel,
+                            // );
+                            log('${cubit.visible}');
                           },
                         ),
                         SizedBox(height: 25.h),

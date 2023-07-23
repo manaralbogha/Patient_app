@@ -18,3 +18,5 @@ class DoctorDetaisFailure extends DoctorDetailsStates {
 class FavouriteSuccessState extends DoctorDetailsStates {}
 
 class AddEvaluteSuccess extends DoctorDetailsStates {}
+
+class UpdateImageState extends DoctorDetailsStates {}
