@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/core/styles/app_colors.dart';
+import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_cuibt.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_states.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
 import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
 
+import 'cubits/home_cubit/home_patient_cuibt.dart';
+import 'cubits/home_cubit/home_patient_states.dart';
+
 class HomePatientView extends StatefulWidget {
   static const route = 'HomePatientView';
-  const HomePatientView({super.key});
+  final PatientModel? patientModel;
+  const HomePatientView({super.key, this.patientModel});
 
   @override
   State<HomePatientView> createState() => _HomePatientViewState();
@@ -22,8 +24,12 @@ class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomePatientCubit()..getDoctors(token: ''),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomePatientCubit()..getDoctors(token: ''),
+        ),
+      ],
       child: Scaffold(
         drawer: Drawer(
           width: 250.w,
@@ -33,7 +39,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                 width: double.infinity,
                 height: 180.h,
                 color: Colors.white,
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -50,7 +56,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                     ),
                     Center(
                       child: Text(
-                        'Manar Albogha',
+                        widget.patientModel?.userModel?.firstName ?? '',
                         style: TextStyle(
                             fontSize: 25.sp, fontWeight: FontWeight.bold),
                       ),

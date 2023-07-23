@@ -24,9 +24,9 @@ class LoginCubit extends Cubit<LoginStates> {
       (failure) => emit(LoginFailure(failureMsg: failure.errorMessege)),
       (loginModel) async {
         loginModel.id = int.parse(JwtDecoder.decode(loginModel.token)['sub']);
-        emit(LoginSuccess(loginModel: loginModel));
+        await getMyInfo(userID: loginModel.id!);
+        emit(LoginSuccess(loginModel: loginModel, patientModel: patientModel));
         if (loginModel.id != null) {
-          await getMyInfo(userID: loginModel.id!);
           log('Patient ID = ${patientModel.id}');
           log('Patient Address = ${patientModel.address}');
           log('Patient Name = ${patientModel.userModel?.firstName}');

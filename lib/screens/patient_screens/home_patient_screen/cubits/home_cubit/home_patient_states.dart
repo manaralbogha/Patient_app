@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../../core/models/doctor_model.dart';
+import '../../../../../core/models/doctor_model.dart';
 
 abstract class HomePatientStates extends Equatable {
   @override
