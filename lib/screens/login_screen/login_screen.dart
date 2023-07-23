@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/screens/patient_screens/doctor_details_screen/doctor_details_screen.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
 import 'package:patient_app/screens/register_screen/register_screen.dart';
 import '../../core/api/services/local/cache_helper.dart';
 import '../../core/styles/app_colors.dart';
@@ -54,7 +54,7 @@ class LoginViewBody extends StatelessWidget {
           if (state.loginModel.role == 'secretary') {
             return AppointmentsRequestsView(token: state.loginModel.token);
           }
-          return const DoctorDetailsView();
+          return const HomePatientView();
         } else {
           return _body(context);
         }

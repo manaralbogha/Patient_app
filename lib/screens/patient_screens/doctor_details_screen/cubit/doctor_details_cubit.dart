@@ -19,6 +19,7 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
     size: 30.w,
   );
   int? ratingValue;
+  bool visible = true;
   DoctorDetailsCubit() : super(DoctorDetailsInitial());
 
   Future<void> addToFavourite(

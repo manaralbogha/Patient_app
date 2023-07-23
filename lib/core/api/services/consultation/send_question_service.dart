@@ -7,7 +7,7 @@ import '../../http_api_services.dart';
 
 abstract class SendQuestionService {
   static Future<Either<Failure, ConsultationModel>> sendQuestion({
-    required int doctorID,
+    required String doctorID,
     required String question,
     required String token,
   }) async {
@@ -21,9 +21,10 @@ abstract class SendQuestionService {
         token: token,
       );
 
-      return right(ConsultationModel.fromJson(data));
+      return right(ConsultationModel.fromJson(data['consultaion']));
     } catch (ex) {
       log('Exception: there is an error in sendQuestion method');
+      log('\n $ex');
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

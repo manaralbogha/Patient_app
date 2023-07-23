@@ -24,8 +24,8 @@ class ConsultationModel {
       doctorID: jsonData['doctor_id'],
       patientID: jsonData['patient_id'],
       id: jsonData['id'],
-      answer: jsonData['answer'],
-      answerDate: jsonData['answer_date'],
+      answer: jsonData['answer'] ?? '',
+      answerDate: jsonData['answer_date'] ?? '',
     );
   }
 }
