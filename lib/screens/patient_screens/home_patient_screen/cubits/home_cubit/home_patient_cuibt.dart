@@ -1,8 +1,11 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/cubit/home_patient_states.dart';
-import '../../../../core/api/services/get_doctors_service.dart';
+import 'package:patient_app/core/api/services/get_departments_service.dart';
+import 'package:patient_app/core/api/services/local/cache_helper.dart';
+import 'package:patient_app/core/api/services/log_out_service.dart';
+import 'package:patient_app/screens/login_screen/login_screen.dart';
+import '../../../../../core/api/services/get_doctors_service.dart';
+import 'home_patient_states.dart';
 
 class HomePatientCubit extends Cubit<HomePatientStates> {
   final String _adminToken =
@@ -18,8 +21,36 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
         emit(HomePatientFailure(failureMsg: failure.errorMessege));
       },
       (doctors) {
-        log('Suceessssssss = ${doctors.length}');
-        emit(HomePatientSuccess(doctors: doctors));
+        emit(GetDoctorsSuccess(doctors: doctors));
+      },
+    );
+  }
+
+  Future<void> getDepartments({required String token}) async {
+    emit(HomePatientLoading());
+    (await GetDepartmentsService.getDepartments(token: _adminToken)).fold(
+      (failure) {
+        emit(HomePatientFailure(failureMsg: failure.errorMessege));
+      },
+      (departments) {
+        emit(GetDepartmentsSuccess(departments: departments));
+      },
+    );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    emit(HomePatientLoading());
+    (await LogOutService.logout(token: await CacheHelper.getData(key: 'Token')))
+        .fold(
+      (failure) {
+        emit(HomePatientFailure(failureMsg: failure.errorMessege));
+      },
+      (success) async {
+        await CacheHelper.deletData(key: 'Token');
+        await CacheHelper.deletData(key: 'Role');
+        emit(LogOutState());
+        // ignore: use_build_context_synchronously
+        Navigator.popAndPushNamed(context, LoginView.route);
       },
     );
   }

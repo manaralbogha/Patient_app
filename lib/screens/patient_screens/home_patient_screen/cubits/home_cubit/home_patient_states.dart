@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../../../core/models/doctor_model.dart';
+import 'package:patient_app/core/models/department_model.dart';
+import '../../../../../core/models/doctor_model.dart';
 
 abstract class HomePatientStates extends Equatable {
   @override
@@ -16,8 +17,16 @@ class HomePatientFailure extends HomePatientStates {
   HomePatientFailure({required this.failureMsg});
 }
 
-class HomePatientSuccess extends HomePatientStates {
+class GetDoctorsSuccess extends HomePatientStates {
   final List<DoctorModel> doctors;
 
-  HomePatientSuccess({required this.doctors});
+  GetDoctorsSuccess({required this.doctors});
 }
+
+class GetDepartmentsSuccess extends HomePatientStates {
+  final List<DepartmentModel> departments;
+
+  GetDepartmentsSuccess({required this.departments});
+}
+
+class LogOutState extends HomePatientStates {}

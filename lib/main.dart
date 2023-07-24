@@ -41,11 +41,12 @@ class PatientApp extends StatelessWidget {
             theme: ThemeData(
               useMaterial3: true,
               appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: Colors.white, size: 30.w),
                 color: defaultColor,
                 centerTitle: true,
                 actionsIconTheme: IconThemeData(
                   color: Colors.white,
-                  size: 23.sp,
+                  size: 30.w,
                 ),
                 titleTextStyle: TextStyle(
                   color: Colors.white,
@@ -54,27 +55,15 @@ class PatientApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: CacheHelper.getData(key: 'Token') == null
-                ? const LoginView()
-                : CacheHelper.getData(key: 'Role') == 'secretary'
-                    ? AppointmentsRequestsView(
-                        token: CacheHelper.getData(key: 'Token'))
-                    : const HomePatientView(),
+            home: const LoginView(),
+            // CacheHelper.getData(key: 'Token') == null
+            //     ? const LoginView()
+            //     : CacheHelper.getData(key: 'Role') == 'secretary'
+            //         ? AppointmentsRequestsView(
+            //             token: CacheHelper.getData(key: 'Token'))
+            //         : const HomePatientView(),
             // initialRoute: initialRoute,
-            routes: AppRouter.router
-            // {
-            //   LoginView.route: (context) => const LoginView(),
-            //   RegisterView.route: (context) => const RegisterView(),
-            //   AddAppointmentView.route: (context) => const AddAppointmentView(),
-            //   HomePatientView.route: (context) => const HomePatientView(),
-            //   DoctorDetailsView.route: (context) => const DoctorDetailsView(),
-            //   AppointmentsRequestsView.route: (context) =>
-            //       AppointmentsRequestsView(
-            //           token: CacheHelper.getData(key: 'Token')),
-            //   ShowAllConsultationView.route: (context) =>
-            //       const ShowAllConsultationView(),
-            // },
-            );
+            routes: AppRouter.router);
       },
     );
   }
