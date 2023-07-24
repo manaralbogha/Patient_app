@@ -18,6 +18,7 @@ abstract class GetPatientConsultationsService {
       return right(consultations);
     } catch (ex) {
       log('Exception: there is an error in getPatientConsultations method');
+      log(ex.toString());
       if (ex is DioException) {
         return left(ServerFailure.fromDioError(ex));
       }

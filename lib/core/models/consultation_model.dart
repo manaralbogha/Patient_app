@@ -1,7 +1,7 @@
 class ConsultationModel {
   final String question;
   final String questionDate;
-  final String doctorID;
+  final int doctorID;
   final int patientID;
   final int id;
   final String? answer;

@@ -110,6 +110,7 @@ class HomePatientViewBody extends StatelessWidget {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is HomePatientSuccess) {
           return CustomScrollView(
+            physics: BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
@@ -168,25 +169,24 @@ class HomePatientViewBody extends StatelessWidget {
                     SizedBox(
                       height: 10.h,
                     ),
-
-                    // const Expanded(child: SizedBox()),
                   ],
                 ),
               ),
-              SliverFillRemaining(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      mainAxisExtent: 260.h,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 5.w,
-                      mainAxisSpacing: 5.h),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => CustomDoctorItem(
-                    doctorModel: state.doctors[index],
-                  ),
-                  itemCount: state.doctors.length,
-                  // scrollDirection: Axis.horizontal,
+              SliverGrid(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  mainAxisExtent: 260.h,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 5.w,
+                  mainAxisSpacing: 5.h,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return CustomDoctorItem(
+                      doctorModel: state.doctors[index],
+                    );
+                  },
+                  childCount: state.doctors.length,
                 ),
               ),
             ],
