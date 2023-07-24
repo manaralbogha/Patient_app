@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../core/api/services/login_service.dart';
-import '../../../core/models/patient_model.dart';
 
 abstract class LoginStates extends Equatable {
   @override
@@ -20,9 +19,8 @@ class LoginFailure extends LoginStates {
 
 class LoginSuccess extends LoginStates {
   final LoginModel loginModel;
-  final PatientModel patientModel;
 
-  LoginSuccess({required this.loginModel, required this.patientModel});
+  LoginSuccess({required this.loginModel});
 }
 
 class ChangePasswordState extends LoginStates {}

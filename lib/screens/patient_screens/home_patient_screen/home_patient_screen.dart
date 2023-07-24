@@ -15,8 +15,8 @@ import 'cubits/home_cubit/home_patient_states.dart';
 
 class HomePatientView extends StatefulWidget {
   static const route = 'HomePatientView';
-  final PatientModel? patientModel;
-  const HomePatientView({super.key, this.patientModel});
+
+  const HomePatientView({super.key});
 
   @override
   State<HomePatientView> createState() => _HomePatientViewState();
@@ -31,7 +31,7 @@ class _HomePatientViewState extends State<HomePatientView> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomePatientCubit(),
+          create: (context) => HomePatientCubit()..fetchMyInfo(),
         ),
         BlocProvider(
           create: (context) => MyAppointmentsCubit()..getMyAppointments(),
@@ -70,7 +70,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                         ),
                         Center(
                           child: Text(
-                            widget.patientModel?.userModel?.firstName ?? '',
+                            homeCubit.patientModel?.userModel?.firstName ?? '',
                             style: TextStyle(
                                 fontSize: 25.sp, fontWeight: FontWeight.bold),
                           ),
@@ -105,7 +105,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                 ),
               ),
               title: Text(
-                'Welcom ${widget.patientModel!.userModel!.firstName}',
+                'Welcom ${homeCubit.patientModel?.userModel?.firstName ?? ''}',
                 style: TextStyle(fontSize: 20.w),
               ),
               actions: const [
@@ -122,7 +122,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                 onTap: (value) {
                   setState(() {
                     if (value == 1) {
-                      homeCubit.getDoctors(token: '');
+                      homeCubit.getDoctors();
                     } else {
                       appointmentsCubit.getMyAppointments();
                     }
@@ -143,8 +143,8 @@ class _HomePatientViewState extends State<HomePatientView> {
               ),
             ),
             body: _index == 1
-                ? HomePatientViewBody(patientModel: widget.patientModel)
-                : AppointmentsViewBody(patientModel: widget.patientModel),
+                ? const HomePatientViewBody()
+                : AppointmentsViewBody(patientModel: homeCubit.patientModel),
           );
         },
       ),
@@ -153,8 +153,7 @@ class _HomePatientViewState extends State<HomePatientView> {
 }
 
 class HomePatientViewBody extends StatelessWidget {
-  final PatientModel? patientModel;
-  const HomePatientViewBody({super.key, this.patientModel});
+  const HomePatientViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -273,8 +272,9 @@ class AppointmentsViewBody extends StatelessWidget {
         } else if (state is MyAppointmentsSuccess) {
           return ListView.builder(
             itemBuilder: (context, index) => const AppointmentRequestItem(),
-            itemCount:
-                state.getMyAppointments(patientID: patientModel!.id!).length,
+            itemCount: patientModel != null
+                ? state.getMyAppointments(patientID: patientModel!.id!).length
+                : state.appointments.length,
           );
         } else {
           return const Center(

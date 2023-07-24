@@ -55,13 +55,12 @@ class PatientApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: const LoginView(),
-            // CacheHelper.getData(key: 'Token') == null
-            //     ? const LoginView()
-            //     : CacheHelper.getData(key: 'Role') == 'secretary'
-            //         ? AppointmentsRequestsView(
-            //             token: CacheHelper.getData(key: 'Token'))
-            //         : const HomePatientView(),
+            home: CacheHelper.getData(key: 'Token') == null
+                ? const LoginView()
+                : CacheHelper.getData(key: 'Role') == 'secretary'
+                    ? AppointmentsRequestsView(
+                        token: CacheHelper.getData(key: 'Token'))
+                    : const HomePatientView(),
             // initialRoute: initialRoute,
             routes: AppRouter.router);
       },

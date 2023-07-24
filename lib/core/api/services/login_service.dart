@@ -34,9 +34,8 @@ abstract class LoginService {
 class LoginModel {
   final String token;
   final String role;
-  int? id;
 
-  LoginModel({required this.token, required this.role, this.id});
+  LoginModel({required this.token, required this.role});
 
   factory LoginModel.fromJson(Map<String, dynamic> jsonData) {
     return LoginModel(token: jsonData['token'], role: jsonData['role']);

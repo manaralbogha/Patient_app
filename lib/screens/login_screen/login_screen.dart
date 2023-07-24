@@ -54,7 +54,7 @@ class LoginViewBody extends StatelessWidget {
           if (state.loginModel.role == 'secretary') {
             return AppointmentsRequestsView(token: state.loginModel.token);
           }
-          return HomePatientView(patientModel: state.patientModel);
+          return const HomePatientView();
         } else {
           return _body(context);
         }
@@ -68,87 +68,90 @@ class LoginViewBody extends StatelessWidget {
       // physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomeImage(
-              image: AppAssets.loginImage,
-              width: screenSize.width * .8,
-              height: screenSize.height * .3,
-            ),
-            // SizedBox(height: screenSize.height * .02),
-            Text(
-              'Login',
-              style: TextStyles.textStyle50,
-            ),
-            SizedBox(height: screenSize.height * .015),
-            Text(
-              'Please Enter Your Credentials To Get Started ...',
-              style:
-                  TextStyles.textStyle18.copyWith(fontStyle: FontStyle.italic),
-              maxLines: 2,
-            ),
-            SizedBox(height: screenSize.height * .05),
-            CustomeTextField(
-              keyboardType: TextInputType.emailAddress,
-              hintText: ' Email ...',
-              onChanged: (value) => loginCubit.email = value,
-            ),
-            SizedBox(height: screenSize.height * .04),
-            CustomeTextField(
-              iconData: Icons.lock,
-              hintText: ' Password ...',
-              obscureText: loginCubit.obscureText,
-              onChanged: (value) => loginCubit.password = value,
-              suffixIcon: IconButton(
-                onPressed: () {
-                  loginCubit.changePasswordState();
-                },
-                icon: Icon(
-                  loginCubit.icon,
-                  color: defaultColor,
-                ),
+        child: Form(
+          key: loginCubit.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomeImage(
+                image: AppAssets.loginImage,
+                width: screenSize.width * .8,
+                height: screenSize.height * .3,
               ),
-            ),
-            SizedBox(height: 40.h),
-            Center(
-              child: CustomeButton(
-                text: 'Login',
-                onPressed: () {
-                  loginCubit.login();
-                  // CacheHelper.deletData(key: 'Token');
-                  // CacheHelper.deletData(key: 'Role');
-                },
+              // SizedBox(height: screenSize.height * .02),
+              Text(
+                'Login',
+                style: TextStyles.textStyle50,
               ),
-            ),
-            SizedBox(height: 12.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't Hava an Account?",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
+              SizedBox(height: screenSize.height * .015),
+              Text(
+                'Please Enter Your Credentials To Get Started ...',
+                style: TextStyles.textStyle18
+                    .copyWith(fontStyle: FontStyle.italic),
+                maxLines: 2,
+              ),
+              SizedBox(height: screenSize.height * .05),
+              CustomeTextField(
+                keyboardType: TextInputType.emailAddress,
+                hintText: ' Email ...',
+                onChanged: (value) => loginCubit.email = value,
+              ),
+              SizedBox(height: screenSize.height * .04),
+              CustomeTextField(
+                iconData: Icons.lock,
+                hintText: ' Password ...',
+                obscureText: loginCubit.obscureText,
+                onChanged: (value) => loginCubit.password = value,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    loginCubit.changePasswordState();
+                  },
+                  icon: Icon(
+                    loginCubit.icon,
+                    color: defaultColor,
                   ),
                 ),
-                SizedBox(width: 6.w),
-                TextButton(
+              ),
+              SizedBox(height: 40.h),
+              Center(
+                child: CustomeButton(
+                  text: 'Login',
                   onPressed: () {
-                    Navigator.pushNamed(context, RegisterView.route);
+                    if (loginCubit.formKey.currentState!.validate()) {
+                      loginCubit.login();
+                    }
                   },
-                  child: const Text(
-                    'Create Account',
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't Hava an Account?",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      color: Colors.grey,
+                      fontSize: 16,
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 15.h),
-          ],
+                  SizedBox(width: 6.w),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, RegisterView.route);
+                    },
+                    child: const Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h),
+            ],
+          ),
         ),
       ),
     );
