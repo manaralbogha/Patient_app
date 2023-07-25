@@ -19,7 +19,8 @@ class ShowAllConsultationCubit extends Cubit<ShowAllConsultationStates> {
       },
       (consultationModel) {
         emit(
-          GetAllPatientConsultationsSuccessState(model: consultationModel),
+          GetAllPatientConsultationsSuccessState(
+              allConsulations: consultationModel),
         );
       },
     );
