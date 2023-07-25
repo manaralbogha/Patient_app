@@ -105,7 +105,11 @@ class DoctorDetailsView extends StatelessWidget {
                 SizedBox(height: 10.h),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, ShowAllConsultationView.route);
+                    Navigator.pushNamed(
+                      context,
+                      ShowAllConsultationView.route,
+                      arguments: doctorModel.id,
+                    );
                   },
                   highlightColor: defaultColor.withOpacity(.4),
                   borderRadius: BorderRadius.circular(10),

@@ -12,7 +12,9 @@ import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/cubits/my_appointments_cubit/my_appointments_cubit.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
-import 'package:patient_app/screens/secretary_screens/appointments_requests_screen/widgets/appointment_request_item.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_drawer_button.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/my_appointment_item.dart';
+import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
 import 'cubits/home_cubit/home_patient_cuibt.dart';
 import 'cubits/home_cubit/home_patient_states.dart';
 
@@ -81,23 +83,33 @@ class _HomePatientViewState extends State<HomePatientView> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 25.h),
+                  CustomDrawerButton(
+                    text: 'Consultations',
+                    icon: Icons.question_answer,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, ShowAllConsultationView.route);
+                    },
+                  ),
+                  SizedBox(height: 15.h),
+                  CustomDrawerButton(
+                    text: 'Favourite',
+                    icon: Icons.favorite_outlined,
+                    // iconColor: Colors.red,
+                    onPressed: () {},
+                  ),
                   const Expanded(child: SizedBox()),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(elevation: 0),
+                  CustomDrawerButton(
+                    text: 'Log Out',
+                    icon: Icons.logout,
+                    iconColor: Colors.red,
                     onPressed: () {
                       _scaffoldKey.currentState!.closeDrawer();
                       homeCubit.logout(context);
                     },
-                    icon: Icon(
-                      Icons.logout,
-                      size: 25.w,
-                      color: Colors.red,
-                    ),
-                    label: Text(
-                      'Log Out',
-                      style: TextStyle(fontSize: 20.w, color: Colors.black54),
-                    ),
                   ),
+                  SizedBox(height: 25.h),
                 ],
               ),
             ),
@@ -124,7 +136,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                 fixedColor: Colors.purple.shade300,
                 onTap: (value) {
                   setState(() {
-                    if (value == 1) {
+                    if (value == 0) {
                       homeCubit.getDoctors();
                     } else {
                       appointmentsCubit.getMyAppointments();
@@ -135,21 +147,26 @@ class _HomePatientViewState extends State<HomePatientView> {
                 currentIndex: _index,
                 items: const [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.calendar_month_sharp),
-                    label: 'Appointments',
-                  ),
-                  BottomNavigationBarItem(
                     icon: Icon(Icons.person),
                     label: 'Profile',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_month_sharp),
+                    label: 'Appointments',
                   ),
                 ],
               ),
             ),
+
             body: _index == 1
                 ? const HomePatientViewBody(
                     // homeCubit: homeCubit,
                     // departments: state.,
                     )
+
+            body: _index == 0
+                ? const HomePatientViewBody()
+
                 : AppointmentsViewBody(patientModel: homeCubit.patientModel),
           );
         },
@@ -323,7 +340,7 @@ class AppointmentsViewBody extends StatelessWidget {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is MyAppointmentsSuccess) {
           return ListView.builder(
-            itemBuilder: (context, index) => const AppointmentRequestItem(),
+            itemBuilder: (context, index) => const MyAppointmentItem(),
             itemCount: patientModel != null
                 ? state.getMyAppointments(patientID: patientModel!.id!).length
                 : state.appointments.length,
