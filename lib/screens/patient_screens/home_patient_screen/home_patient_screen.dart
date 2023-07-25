@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/core/models/department_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
-import 'package:patient_app/core/utils/app_assets.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
@@ -157,16 +153,11 @@ class _HomePatientViewState extends State<HomePatientView> {
                 ],
               ),
             ),
-
-            body: _index == 1
+            body: _index == 0
                 ? const HomePatientViewBody(
                     // homeCubit: homeCubit,
                     // departments: state.,
                     )
-
-            body: _index == 0
-                ? const HomePatientViewBody()
-
                 : AppointmentsViewBody(patientModel: homeCubit.patientModel),
           );
         },
@@ -290,7 +281,7 @@ class HomePatientViewBody extends StatelessWidget {
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.r),
                               topRight: Radius.circular(10.r)),
-                          image: state.departments[index].img,
+                          // image: state.departments[index].img,
                           width: double.infinity,
                           height: 90.h,
                         ),

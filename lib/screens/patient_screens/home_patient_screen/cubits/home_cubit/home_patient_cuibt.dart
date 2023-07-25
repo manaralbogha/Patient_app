@@ -89,9 +89,8 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
     );
   }
 
-  void viewDoctorsForDebarment({required departmentsId}) {
+  Future<void> viewDoctorsForDebarment({required departmentsId}) async {
     departmentID = departmentsId;
-
-    getDoctors();
+    await getDoctors();
   }
 }
