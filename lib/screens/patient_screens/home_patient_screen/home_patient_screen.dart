@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/models/department_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/utils/app_assets.dart';
@@ -154,8 +157,16 @@ class _HomePatientViewState extends State<HomePatientView> {
                 ],
               ),
             ),
+
+            body: _index == 1
+                ? const HomePatientViewBody(
+                    // homeCubit: homeCubit,
+                    // departments: state.,
+                    )
+
             body: _index == 0
                 ? const HomePatientViewBody()
+
                 : AppointmentsViewBody(patientModel: homeCubit.patientModel),
           );
         },
@@ -165,12 +176,15 @@ class _HomePatientViewState extends State<HomePatientView> {
 }
 
 class HomePatientViewBody extends StatelessWidget {
-  const HomePatientViewBody({super.key});
+  const HomePatientViewBody({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomePatientCubit, HomePatientStates>(
       builder: (context, state) {
+        HomePatientCubit homeCubit = BlocProvider.of<HomePatientCubit>(context);
         if (state is HomePatientLoading) {
           return const CustomeProgressIndicator();
         } else if (state is HomePatientFailure) {
@@ -183,85 +197,131 @@ class HomePatientViewBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      height: 150.h,
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.departments.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 130.w,
-                            child: InkWell(
-                              onTap: () {},
-                              borderRadius: BorderRadius.circular(10.r),
-                              splashColor: defaultColor,
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      color: Colors.green, width: 2),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.r)),
-                                ),
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    CustomeImage(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10.r),
-                                          topRight: Radius.circular(10.r)),
-                                      image: AppAssets.stethoscope,
-                                      width: double.infinity,
-                                      height: 90.h,
-                                    ),
-                                    SizedBox(
-                                      height: 10.h,
-                                    ),
-                                    const Text(
-                                      "Public Department",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    _departmentsListView(state, homeCubit),
                     SizedBox(
                       height: 10.h,
                     ),
                   ],
                 ),
               ),
-              SliverGrid(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisExtent: 260.h,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 5.w,
-                  mainAxisSpacing: 5.h,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return CustomDoctorItem(
-                      doctorModel: state.doctors[index],
-                    );
-                  },
-                  childCount:
-                      state.getDepartmentDoctors(departmentID: 1).length,
-                ),
-              ),
+              homeCubit.departmentID != null
+                  ? _doctorSliverGrid(state, homeCubit)
+                  : const SliverFillRemaining(
+                      child: Center(child: Text('Please Select Department'))),
             ],
           );
         } else {
-          return const Center(child: Text('Initial'));
+          return const CustomeProgressIndicator();
         }
       },
+    );
+  }
+
+  SliverGrid _doctorSliverGrid(
+    GetDoctorsAndDepartmentsSuccess state,
+    HomePatientCubit homeCubit,
+  ) {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
+        mainAxisExtent: 260.h,
+        childAspectRatio: 3 / 2,
+        crossAxisSpacing: 5.w,
+        mainAxisSpacing: 5.h,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return CustomDoctorItem(
+            doctorModel: state.getDepartmentDoctors(
+                departmentID: homeCubit.departmentID)[index],
+          );
+        },
+        childCount: state
+            .getDepartmentDoctors(departmentID: homeCubit.departmentID)
+            .length,
+      ),
+    );
+  }
+
+  Container _departmentsListView(
+      GetDoctorsAndDepartmentsSuccess state, HomePatientCubit homeCubit) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      height: 150.h,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: state.departments.length,
+        itemBuilder: (context, index) {
+          return SizedBox(
+            width: 130.w,
+            child: InkWell(
+              onTap: () {
+                if (homeCubit.departmentID != state.departments[index].id) {
+                  homeCubit.viewDoctorsForDebarment(
+                    departmentsId: state.departments[index].id,
+                  );
+                }
+              },
+              borderRadius: BorderRadius.circular(10.r),
+              splashColor: defaultColor,
+              child: Stack(
+                clipBehavior: Clip.none,
+                fit: StackFit.passthrough,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: homeCubit.departmentID ==
+                                state.departments[index].id
+                            ? Colors.green
+                            : Colors.grey,
+                        width: homeCubit.departmentID ==
+                                state.departments[index].id
+                            ? 2
+                            : 1,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                    ),
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        CustomeImage(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.r),
+                              topRight: Radius.circular(10.r)),
+                          image: state.departments[index].img,
+                          width: double.infinity,
+                          height: 90.h,
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Text(
+                          state.departments[index].name.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (homeCubit.departmentID != null &&
+                      homeCubit.departmentID == state.departments[index].id)
+                    const Positioned(
+                      top: -5,
+                      right: -5,
+                      child: Icon(
+                        Icons.check_circle_outline_rounded,
+                        color: Colors.green,
+                      ),
+                    )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

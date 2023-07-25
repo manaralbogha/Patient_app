@@ -16,7 +16,9 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
 
   int? bottomNavigationBarIndex;
   PatientModel? patientModel;
-  HomePatientCubit() : super(HomePatientInitial());
+  HomePatientCubit() : super(HomePatientLoading());
+
+  int? departmentID;
 
   Future<void> getDoctors() async {
     emit(HomePatientLoading());
@@ -85,5 +87,11 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
         Navigator.popAndPushNamed(context, LoginView.route);
       },
     );
+  }
+
+  void viewDoctorsForDebarment({required departmentsId}) {
+    departmentID = departmentsId;
+
+    getDoctors();
   }
 }
