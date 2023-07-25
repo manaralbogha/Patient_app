@@ -24,8 +24,21 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
       (failure) {
         emit(HomePatientFailure(failureMsg: failure.errorMessege));
       },
-      (doctors) {
-        emit(GetDoctorsSuccess(doctors: doctors));
+      (doctors) async {
+        (await GetDepartmentsService.getDepartments(token: _adminToken)).fold(
+          (failure) {
+            emit(HomePatientFailure(failureMsg: failure.errorMessege));
+          },
+          (departments) {
+            emit(
+              GetDoctorsAndDepartmentsSuccess(
+                doctors: doctors,
+                departments: departments,
+              ),
+            );
+          },
+        );
+        //emit(GetDoctorsSuccess(doctors: doctors));
       },
     );
   }
@@ -45,17 +58,17 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
     );
   }
 
-  Future<void> getDepartments({required String token}) async {
-    emit(HomePatientLoading());
-    (await GetDepartmentsService.getDepartments(token: _adminToken)).fold(
-      (failure) {
-        emit(HomePatientFailure(failureMsg: failure.errorMessege));
-      },
-      (departments) {
-        emit(GetDepartmentsSuccess(departments: departments));
-      },
-    );
-  }
+  // Future<void> getDepartments({required String token}) async {
+  //   emit(HomePatientLoading());
+  //   (await GetDepartmentsService.getDepartments(token: _adminToken)).fold(
+  //     (failure) {
+  //       emit(HomePatientFailure(failureMsg: failure.errorMessege));
+  //     },
+  //     (departments) {
+  //       emit(GetDepartmentsSuccess(departments: departments));
+  //     },
+  //   );
+  // }
 
   Future<void> logout(BuildContext context) async {
     emit(HomePatientLoading());
