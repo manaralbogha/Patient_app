@@ -17,16 +17,30 @@ class HomePatientFailure extends HomePatientStates {
   HomePatientFailure({required this.failureMsg});
 }
 
-class GetDoctorsSuccess extends HomePatientStates {
+class GetDoctorsAndDepartmentsSuccess extends HomePatientStates {
   final List<DoctorModel> doctors;
-
-  GetDoctorsSuccess({required this.doctors});
-}
-
-class GetDepartmentsSuccess extends HomePatientStates {
   final List<DepartmentModel> departments;
 
-  GetDepartmentsSuccess({required this.departments});
+  GetDoctorsAndDepartmentsSuccess({
+    required this.doctors,
+    required this.departments,
+  });
+
+  List<DoctorModel> getDepartmentDoctors({required int departmentID}) {
+    List<DoctorModel> doctors = [];
+    for (DoctorModel item in this.doctors) {
+      if (item.departmentID == departmentID) {
+        doctors.add(item);
+      }
+    }
+    return doctors;
+  }
 }
+
+// class GetDepartmentsSuccess extends HomePatientStates {
+//   final List<DepartmentModel> departments;
+
+//   GetDepartmentsSuccess({required this.departments});
+// }
 
 class LogOutState extends HomePatientStates {}

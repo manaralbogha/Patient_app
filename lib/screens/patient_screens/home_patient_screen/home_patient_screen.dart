@@ -163,11 +163,9 @@ class HomePatientViewBody extends StatelessWidget {
           return const CustomeProgressIndicator();
         } else if (state is HomePatientFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
-        } else if (state is GetDoctorsSuccess) {
+        } else if (state is GetDoctorsAndDepartmentsSuccess) {
           return CustomScrollView(
-
             physics: const BouncingScrollPhysics(),
-
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
@@ -179,7 +177,7 @@ class HomePatientViewBody extends StatelessWidget {
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: 20,
+                        itemCount: state.departments.length,
                         itemBuilder: (context, index) {
                           return SizedBox(
                             width: 130.w,
@@ -188,8 +186,6 @@ class HomePatientViewBody extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.r),
                               splashColor: defaultColor,
                               child: Card(
-                                // margin: EdgeInsets.all(2),
-
                                 shape: RoundedRectangleBorder(
                                   side: const BorderSide(
                                       color: Colors.green, width: 2),
@@ -244,7 +240,8 @@ class HomePatientViewBody extends StatelessWidget {
                       doctorModel: state.doctors[index],
                     );
                   },
-                  childCount: state.doctors.length,
+                  childCount:
+                      state.getDepartmentDoctors(departmentID: 1).length,
                 ),
               ),
             ],
