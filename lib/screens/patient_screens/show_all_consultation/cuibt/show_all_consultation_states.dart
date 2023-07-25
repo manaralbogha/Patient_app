@@ -13,9 +13,19 @@ class GetAllPatientConsultationsLoadingState
     extends ShowAllConsultationStates {}
 
 class GetAllPatientConsultationsSuccessState extends ShowAllConsultationStates {
-  final List<ConsultationModel> model;
+  final List<ConsultationModel> allConsulations;
 
-  GetAllPatientConsultationsSuccessState({required this.model});
+  GetAllPatientConsultationsSuccessState({required this.allConsulations});
+
+  List<ConsultationModel> getDoctorConsulations({required int doctorID}) {
+    List<ConsultationModel> list = [];
+    for (ConsultationModel item in allConsulations) {
+      if (item.doctorID == doctorID) {
+        list.add(item);
+      }
+    }
+    return list;
+  }
 }
 
 class GetAllPatientConsultationsErrorState extends ShowAllConsultationStates {
