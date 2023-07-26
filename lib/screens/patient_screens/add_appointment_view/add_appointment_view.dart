@@ -23,7 +23,8 @@ class AddAppointmentView extends StatelessWidget {
     DoctorModel doctorModel =
         ModalRoute.of(context)!.settings.arguments as DoctorModel;
     return BlocProvider(
-      create: (context) => AddAppointmentCubit(),
+      create: (context) =>
+          AddAppointmentCubit()..fetchDoctorTimes(doctorID: doctorModel.id),
       child: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -78,7 +79,10 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AddAppointmentCubit cubit = BlocProvider.of<AddAppointmentCubit>(context);
+    AddAppointmentCubit cubit = BlocProvider.of<AddAppointmentCubit>(
+      context,
+      listen: false,
+    );
     cubit.createDatesList();
     return Column(
       children: [
@@ -116,6 +120,7 @@ class _Body extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     _TimesButtons(addAppointmentCubit: cubit),
                     SizedBox(
@@ -169,6 +174,10 @@ class _Body extends StatelessWidget {
                             );
                           }
                         }
+
+                        // cubit.storeDoctorTimes(time: cubit.doctorTimes[1]);
+                        // log('\nTimes 1 = ${cubit.times11}');
+                        // log('\nTimes 2 = ${cubit.times22}');
                       },
                       text: 'ADD',
                       width: double.infinity,
@@ -178,7 +187,7 @@ class _Body extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -193,31 +202,60 @@ class _TimesButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(
-        2,
-        (indexR) => Column(
-          children: List.generate(
-            addAppointmentCubit.times1.length,
-            (index) => _timeDialogButton(
-              context,
-              onTap: () {
-                addAppointmentCubit.selectTime(index: index, indexR: indexR);
-              },
-              time: indexR == 0
-                  ? addAppointmentCubit.times1[index]
-                  : addAppointmentCubit.times2[index],
-              selectIndexTime: addAppointmentCubit.selectIndexTime != null
-                  ? addAppointmentCubit.selectIndexTime!.toInt()
-                  : null,
-              timeSelected: addAppointmentCubit.addAppointmentModel.time,
-              index: index,
-            ),
+    if (addAppointmentCubit.selectIndexDay != null) {
+      return addAppointmentCubit.times11.isNotEmpty &&
+              addAppointmentCubit.times22.isNotEmpty
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                2,
+                (indexR) => Column(
+                  children: List.generate(
+                    indexR == 0
+                        ? addAppointmentCubit.times11.length
+                        : addAppointmentCubit.times22.length,
+                    (index) => _timeDialogButton(
+                      context,
+                      onTap: () {
+                        addAppointmentCubit.selectTime(
+                            index: index, indexR: indexR);
+                      },
+                      time: indexR == 0
+                          ? addAppointmentCubit.times11[index]
+                          : addAppointmentCubit.times22[index],
+                      selectIndexTime:
+                          addAppointmentCubit.selectIndexTime != null
+                              ? addAppointmentCubit.selectIndexTime!.toInt()
+                              : null,
+                      timeSelected:
+                          addAppointmentCubit.addAppointmentModel.time,
+                      index: index,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : SizedBox(
+              height: 265.h,
+              child: const Center(
+                child: Text(
+                  'No Availabll Times',
+                  style: TextStyle(fontSize: 30, color: Colors.black54),
+                ),
+              ),
+            );
+    } else {
+      return SizedBox(
+        height: 265.h,
+        child: const Center(
+          child: Text(
+            'Please Select Day',
+            style: TextStyle(fontSize: 30, color: Colors.black54),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
 
@@ -289,7 +327,8 @@ class _DatesListView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
               ),
               onTap: () {
-                addAppointmentCubit.selectDay(index: index);
+                addAppointmentCubit.selectDay(
+                    index: index, day: addAppointmentCubit.days[index]);
               },
               child: Container(
                 padding: const EdgeInsets.all(5),
