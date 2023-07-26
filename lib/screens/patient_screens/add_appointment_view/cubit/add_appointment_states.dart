@@ -25,3 +25,19 @@ class AddAppointmentSuccessState extends AddAppointmentStates {
 
   AddAppointmentSuccessState({required this.addAppointmentModel});
 }
+
+// class GetDoctorTimesState extends AddAppointmentStates {
+//   final List<WorkDayModel> times;
+
+//   GetDoctorTimesState({required this.times});
+
+//   // List<WorkDayModel> getDoctorTimes({required int doctorID}) {
+//   //   List<WorkDayModel> times = [];
+//   //   for (WorkDayModel item in allTimes) {
+//   //     if (doctorID == item.doctorID) {
+//   //       times.add(item);
+//   //     }
+//   //   }
+//   //   return times;
+//   // }
+// }
