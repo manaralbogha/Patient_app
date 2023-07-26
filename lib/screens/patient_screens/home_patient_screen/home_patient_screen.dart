@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/models/appointment_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
@@ -84,6 +85,7 @@ class _HomePatientViewState extends State<HomePatientView> {
                     text: 'Consultations',
                     icon: Icons.question_answer,
                     onPressed: () {
+                      _scaffoldKey.currentState!.closeDrawer();
                       Navigator.pushNamed(
                           context, ShowAllConsultationView.route);
                     },
@@ -93,7 +95,9 @@ class _HomePatientViewState extends State<HomePatientView> {
                     text: 'Favourite',
                     icon: Icons.favorite_outlined,
                     // iconColor: Colors.red,
-                    onPressed: () {},
+                    onPressed: () {
+                      _scaffoldKey.currentState!.closeDrawer();
+                    },
                   ),
                   const Expanded(child: SizedBox()),
                   CustomDrawerButton(
@@ -331,7 +335,17 @@ class AppointmentsViewBody extends StatelessWidget {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is MyAppointmentsSuccess) {
           return ListView.builder(
-            itemBuilder: (context, index) => const MyAppointmentItem(),
+            itemBuilder: (context, index) {
+              List<AppointmentModel> myAppointments =
+                  state.getMyAppointments(patientID: patientModel!.id!);
+              return MyAppointmentItem(
+                appointmentID: myAppointments[index].id,
+                time:
+                    '${myAppointments[index].date} - ${myAppointments[index].time}',
+                doctor: 'Abdullah Nahlawi',
+                status: '${myAppointments[index].status}...',
+              );
+            },
             itemCount: patientModel != null
                 ? state.getMyAppointments(patientID: patientModel!.id!).length
                 : state.appointments.length,
