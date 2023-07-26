@@ -14,7 +14,7 @@ abstract class DeleteAppointmentService {
       var data = await ApiServices.post(
         endPoint: 'deleteAppointment',
         body: {
-          'id': id,
+          'id': '$id',
         },
         token: token,
       );
