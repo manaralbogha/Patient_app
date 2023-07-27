@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/functions/custome_dialogs.dart';
-import 'package:patient_app/screens/login_screen/login_screen.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
 import 'package:patient_app/screens/register_screen/widgets/choice_button.dart';
 import '../../core/styles/app_colors.dart';
 import '../../core/styles/text_styles.dart';
@@ -47,7 +47,7 @@ class RegisterViewBody extends StatelessWidget {
         } else if (state is RegisterFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is RegisterSuccess) {
-          return const LoginView();
+          return const HomePatientView();
         } else {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
