@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:awesome_icons/awesome_icons.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:patient_app/core/models/register_model.dart';
-import 'package:patient_app/screens/patient_screens/add_appointment_view/add_appointment_view.dart';
 import 'package:patient_app/screens/register_screen/cubit/register_states.dart';
 import '../../../core/api/services/local/cache_helper.dart';
 import '../../../core/api/services/register_service.dart';
@@ -21,8 +23,17 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
   RegisterCubit() : super(RegisterInitial());
 
+  Future<void> setFcmToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    registerModel.fcmToken = fcmToken;
+  }
+
   Future<void> register(BuildContext context) async {
-    registerModel.fcmToken = 'cccc';
+    await setFcmToken().then(
+      (value) {
+        log('FCM Token = ${registerModel.fcmToken}');
+      },
+    );
     emit(RegisterLoading());
     (await RegisterService.registerPatient(registerModel: registerModel)).fold(
       (failure) {
@@ -32,7 +43,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         emit(RegisterSuccess(loginModel: loginModel));
         CacheHelper.saveData(key: 'Token', value: loginModel.token);
         CacheHelper.saveData(key: 'Role', value: loginModel.role);
-        Navigator.popAndPushNamed(context, AddAppointmentView.route);
+        // Navigator.popAndPushNamed(context, AddAppointmentView.route);
         CustomeSnackBar.showSnackBar(
           context,
           msg: 'Account Created Successfully',

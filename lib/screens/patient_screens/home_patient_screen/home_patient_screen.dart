@@ -28,6 +28,12 @@ class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // @override
+  // void initState() {
+  //   FirebaseAPIs.getFirebaseMessagingToken();
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -334,22 +340,33 @@ class AppointmentsViewBody extends StatelessWidget {
         } else if (state is MyAppointmentsFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is MyAppointmentsSuccess) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              List<AppointmentModel> myAppointments =
-                  state.getMyAppointments(patientID: patientModel!.id!);
-              return MyAppointmentItem(
-                appointmentID: myAppointments[index].id,
-                time:
-                    '${myAppointments[index].date} - ${myAppointments[index].time}',
-                doctor: 'Abdullah Nahlawi',
-                status: '${myAppointments[index].status}...',
-              );
-            },
-            itemCount: patientModel != null
-                ? state.getMyAppointments(patientID: patientModel!.id!).length
-                : state.appointments.length,
-          );
+          if (state
+              .getMyAppointments(patientID: patientModel!.id!)
+              .isNotEmpty) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                List<AppointmentModel> myAppointments =
+                    state.getMyAppointments(patientID: patientModel!.id!);
+                return MyAppointmentItem(
+                  appointmentID: myAppointments[index].id,
+                  time:
+                      '${myAppointments[index].date} - ${myAppointments[index].time}',
+                  doctor: 'Abdullah Nahlawi',
+                  status: '${myAppointments[index].status}...',
+                );
+              },
+              itemCount: patientModel != null
+                  ? state.getMyAppointments(patientID: patientModel!.id!).length
+                  : state.appointments.length,
+            );
+          } else {
+            return Center(
+              child: Text(
+                'No Appointments Sent',
+                style: TextStyle(fontSize: 22.w, color: Colors.black54),
+              ),
+            );
+          }
         } else {
           return const Center(
             child: Text('Initial'),

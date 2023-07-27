@@ -17,9 +17,14 @@ class CustomDoctorItem extends StatelessWidget {
         SizedBox(
           width: 200.w,
           child: InkWell(
-            onTap: () {
+            onTap: () async {
               Navigator.pushNamed(context, DoctorDetailsView.route,
                   arguments: doctorModel);
+
+              // final fcmToken = await FirebaseMessaging.instance.getToken();
+              // log('PushToken = \n$fcmToken');
+
+              // await FirebaseAPIs.getFirebaseMessagingToken();
             },
             highlightColor: defaultColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(15),
