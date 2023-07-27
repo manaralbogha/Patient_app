@@ -26,6 +26,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
   Future<void> setFcmToken() async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     registerModel.fcmToken = fcmToken;
+    log(fcmToken.toString());
   }
 
   Future<void> register(BuildContext context) async {
