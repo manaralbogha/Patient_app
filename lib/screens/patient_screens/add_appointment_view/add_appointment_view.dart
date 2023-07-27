@@ -10,6 +10,8 @@ import 'package:patient_app/core/widgets/custome_button.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
+import 'package:patient_app/screens/patient_screens/doctor_details_screen/doctor_details_screen.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
 import '../../../core/widgets/custome_arrow_back_button.dart';
 import 'cubit/add_appointment_cubit.dart';
 import 'cubit/add_appointment_states.dart';
@@ -53,10 +55,15 @@ class AddAppointmentViewBody extends StatelessWidget {
             errorMsg: state.failureMsg,
           );
         } else if (state is AddAppointmentSuccessState) {
-          return _Body(
-            key: key,
-            doctorModel: doctorModel,
-          );
+          // Navigator.popUntil(
+          //   context,
+          //   ModalRoute.withName(HomePatientView.route),
+          // );
+          return HomePatientView();
+          // _Body(
+          //   key: key,
+          //   doctorModel: doctorModel,
+          // );
         } else if (state is AddAppointmentLodgingState) {
           return const CustomeProgressIndicator();
         } else {

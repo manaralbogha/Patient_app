@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/functions/custome_dialogs.dart';
+import 'package:patient_app/core/functions/custome_snack_bar.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
 import 'package:patient_app/screens/register_screen/widgets/choice_button.dart';
 import '../../core/styles/app_colors.dart';
@@ -89,10 +90,20 @@ class RegisterViewBody extends StatelessWidget {
                     ),
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
-                      hintText: 'Email ...',
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: (value) => cubit.registerModel.email = value,
-                    ),
+                        hintText: 'Email ...',
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) => cubit.registerModel.email = value,
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'required';
+                          } else {
+                            if (!RegExp(r'\S+@\S+\.\S+')
+                                .hasMatch(value.toString())) {
+                              return "Please enter a valid email address";
+                            }
+                          }
+                          return null;
+                        }),
                     SizedBox(height: screenSize.height * .02),
                     CustomeTextField(
                       hintText: 'Password ...',
@@ -141,6 +152,14 @@ class RegisterViewBody extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                       hintText: 'Phone ...',
                       iconData: Icons.phone,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'required';
+                        } else if (value!.length < 10) {
+                          return 'At least 10 character';
+                        }
+                        return null;
+                      },
                       onChanged: (value) =>
                           cubit.registerModel.phoneNum = value,
                     ),
@@ -194,7 +213,15 @@ class RegisterViewBody extends StatelessWidget {
                       text: 'Next',
                       onPressed: () {
                         if (cubit.formKey.currentState!.validate()) {
-                          cubit.register(context);
+                          if (cubit.registerModel.gender != null) {
+                            cubit.register(context);
+                          } else {
+                            CustomeSnackBar.showSnackBar(
+                              context,
+                              msg: "Please Select Gender",
+                              color: Colors.red,
+                            );
+                          }
                         }
                       },
                     ),
