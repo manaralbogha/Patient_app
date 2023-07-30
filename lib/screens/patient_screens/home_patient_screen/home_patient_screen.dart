@@ -287,13 +287,14 @@ class HomePatientViewBody extends StatelessWidget {
                     color: Colors.white,
                     child: Column(
                       children: [
-                        CustomeImage(
+                        CustomeNetworkImage(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.r),
                               topRight: Radius.circular(10.r)),
                           // image: state.departments[index].img,
                           width: double.infinity,
                           height: 90.h,
+                          imageUrl: state.departments[index].img,
                         ),
                         SizedBox(
                           height: 10.h,
