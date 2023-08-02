@@ -38,11 +38,20 @@ class CustomDoctorItem extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CustomeImage(
-                      image: 'assets/images/register_doctor_image3.jpg',
-                      width: 190.w,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                    doctorModel.imagePath == 'default'
+                        ? CustomeImage(
+                            image: 'assets/images/register_doctor_image3.jpg',
+                            width: 190.w,
+                            height: 160.h,
+                            borderRadius: BorderRadius.circular(15),
+                          )
+                        : CustomeNetworkImage(
+                            imageUrl: doctorModel.imagePath,
+                            width: 190.w,
+                            height: 160.h,
+                            borderRadius: BorderRadius.circular(15),
+                            fit: BoxFit.cover,
+                          ),
                     SizedBox(
                       width: 170.w,
                       child: const Divider(
@@ -50,7 +59,7 @@ class CustomDoctorItem extends StatelessWidget {
                         color: Colors.grey,
                       ),
                     ),
-                    SizedBox(height: 5.w),
+                    // SizedBox(height: 5.w),
                     Text(
                       'Dr. ${doctorModel.user.firstName} ${doctorModel.user.lastName}',
                       maxLines: 1,
@@ -61,7 +70,7 @@ class CustomDoctorItem extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 5.w),
+                    // SizedBox(height: 5.w),
                     Text(
                       'Cardiac Surgery Doctor',
                       maxLines: 1,
@@ -72,6 +81,23 @@ class CustomDoctorItem extends StatelessWidget {
                         color: Colors.grey,
                       ),
                     ),
+                    SizedBox(height: 5.w),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        doctorModel.review,
+                        (index) => const Text('⭐️'),
+                      ),
+                      // [
+                      //   Text(
+                      //     '(${doctorModel.review}.0 / 5) ⭐️',
+                      //     style: TextStyle(
+                      //       fontSize: 12.h,
+                      //       color: Colors.grey,
+                      //     ),
+                      //   ),
+                      // ],
+                    ),
                   ],
                 ),
               ),
@@ -79,7 +105,7 @@ class CustomDoctorItem extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 160.w,
+          top: 150.w,
           left: 135.w,
           child: CustomeImage(
             image: 'assets/images/stethoscope_icon.png',

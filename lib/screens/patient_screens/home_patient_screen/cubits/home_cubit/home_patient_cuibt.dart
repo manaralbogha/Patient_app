@@ -5,6 +5,7 @@ import 'package:patient_app/core/api/services/get_departments_service.dart';
 import 'package:patient_app/core/api/services/get_my_information.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/api/services/log_out_service.dart';
+import 'package:patient_app/core/models/department_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/screens/login_screen/login_screen.dart';
 import '../../../../../core/api/services/get_doctors_service.dart';
@@ -16,9 +17,11 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
 
   int? bottomNavigationBarIndex;
   PatientModel? patientModel;
-  HomePatientCubit() : super(HomePatientLoading());
-
+  List<DepartmentModel> departments = [];
+  int? departmentIndex;
   int? departmentID;
+
+  HomePatientCubit() : super(HomePatientLoading());
 
   Future<void> getDoctors() async {
     emit(HomePatientLoading());
@@ -32,6 +35,7 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
             emit(HomePatientFailure(failureMsg: failure.errorMessege));
           },
           (departments) {
+            this.departments = departments;
             emit(
               GetDoctorsAndDepartmentsSuccess(
                 doctors: doctors,
@@ -89,7 +93,10 @@ class HomePatientCubit extends Cubit<HomePatientStates> {
     );
   }
 
-  Future<void> viewDoctorsForDebarment({required departmentsId}) async {
+  Future<void> viewDoctorsForDebarment({
+    required int departmentsId,
+    required String departmentImage,
+  }) async {
     departmentID = departmentsId;
     await getDoctors();
   }

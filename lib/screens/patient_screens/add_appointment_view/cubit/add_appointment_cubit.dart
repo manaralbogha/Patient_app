@@ -51,10 +51,17 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
 
   DateTime getDateTime({required String time}) {
     String s = time.substring(time.length - 2, time.length);
-    int hour = (s == 'AM')
-        ? int.parse(time.substring(0, 2))
-        : int.parse(time.substring(0, 2)) + 12;
-    return DateTime(2023, 1, 1, hour);
+    String s2 = time.substring(0, 2);
+    if (s2 == '12') {
+      if (s == 'AM') {
+        return DateTime(2023, 1, 1, 0);
+      } else {
+        return DateTime(2023, 1, 1, 12);
+      }
+    } else {
+      int hour = (s == 'AM') ? int.parse(s2) : int.parse(s2) + 12;
+      return DateTime(2023, 1, 1, hour);
+    }
   }
 
   String dateTimeToString({required DateTime time}) {
@@ -68,7 +75,7 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
 
     String minute = (time.minute == 0) ? '00' : '${time.minute}';
 
-    String aMpM = (time.hour > 11) ? 'PM' : 'AM';
+    String aMpM = (time.hour > 11 && time.hour != 0) ? 'PM' : 'AM';
 
     return '$hour:$minute $aMpM';
   }
@@ -88,8 +95,8 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   }
 
   void storeDoctorTimes({required WorkDayModel time}) {
-    times11.clear();
-    times22.clear();
+    times1.clear();
+    times2.clear();
     List<String> times = getTimesBetween(time: time);
 
     if (times.length.isOdd) {
@@ -98,40 +105,23 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
       int x1 = x ~/ 2;
 
       for (int i = 0; i < x1; i++) {
-        times11.add(times[i]);
+        times1.add(times[i]);
       }
       for (int i = x1; i < times.length; i++) {
-        times22.add(times[i]);
+        times2.add(times[i]);
       }
     } else {
       for (int i = 0; i < times.length / 2; i++) {
-        times11.add(times[i]);
+        times1.add(times[i]);
       }
       for (int i = times.length / 2 as int; i < times.length; i++) {
-        times22.add(times[i]);
+        times2.add(times[i]);
       }
     }
   }
 
-  List<String> times11 = [];
-  List<String> times22 = [];
-
-  // List<String> times1 = [
-  //   '10:00 AM',
-  //   '11:00 AM',
-  //   '12:00 PM',
-  //   '01:00 PM',
-  //   '02:00 PM',
-  //   '03:00 PM',
-  // ];
-  // List<String> times2 = [
-  //   '04:00 PM',
-  //   '05:00 PM',
-  //   '06:00 PM',
-  //   '07:00 PM',
-  //   '08:00 PM',
-  //   '09:00 PM',
-  // ];
+  List<String> times1 = [];
+  List<String> times2 = [];
 
   List<String> createDatesList() {
     dates.clear();
@@ -148,8 +138,8 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
 
   void selectDay({required int index, required String day}) {
     emit(AddAppointmentInitial());
-    times11.clear();
-    times22.clear();
+    times1.clear();
+    times2.clear();
     selectIndexDay = index;
     addAppointmentModel.date = '${days[index]} ${dates[index]}';
     for (var element in doctorTimes) {
@@ -164,7 +154,7 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   void selectTime({required int index, required int indexR}) {
     emit(AddAppointmentInitial());
     selectIndexTime = index;
-    addAppointmentModel.time = indexR == 0 ? times11[index] : times22[index];
+    addAppointmentModel.time = indexR == 0 ? times1[index] : times2[index];
     log('${addAppointmentModel.time}');
     emit(SelectTimeState());
   }

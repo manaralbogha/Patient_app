@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/widgets/custome_icon.dart';
 
-import '../styles/app_colors.dart';
 import '../styles/text_styles.dart';
 
 class CustomeTextInfo extends StatelessWidget {
@@ -14,16 +14,17 @@ class CustomeTextInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          iconData,
-          color: defaultColor,
-        ),
-        const SizedBox(width: 5),
+        // Icon(
+        //   iconData,
+        //   color: defaultColor,
+        // ),
+        CustomeIcon(icon: iconData),
+        SizedBox(width: 10.w),
         SizedBox(
           width: 175.w,
           child: Text(
             text,
-            style: TextStyles.textStyle16,
+            style: TextStyles.textStyle16.copyWith(color: Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
