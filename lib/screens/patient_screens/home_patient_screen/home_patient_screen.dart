@@ -234,6 +234,10 @@ class HomePatientViewBody extends StatelessWidget {
         (BuildContext context, int index) {
           return CustomDoctorItem(
             doctorModel: state.getDepartmentDoctors(
+                departmentImg: (homeCubit.departments.isNotEmpty &&
+                        homeCubit.departmentIndex != null)
+                    ? homeCubit.departments[homeCubit.departmentIndex!].img
+                    : null,
                 departmentID: homeCubit.departmentID)[index],
           );
         },
@@ -259,8 +263,10 @@ class HomePatientViewBody extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 if (homeCubit.departmentID != state.departments[index].id) {
+                  homeCubit.departmentIndex = index;
                   homeCubit.viewDoctorsForDebarment(
                     departmentsId: state.departments[index].id,
+                    departmentImage: state.departments[index].img,
                   );
                 }
               },

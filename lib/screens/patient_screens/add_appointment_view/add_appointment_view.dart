@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/core/api/services/local/cache_helper.dart';
-import 'package:patient_app/core/functions/custome_snack_bar.dart';
 import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
-import 'package:patient_app/core/styles/text_styles.dart';
 import 'package:patient_app/core/widgets/custome_button.dart';
-import 'package:patient_app/core/widgets/custome_error_widget.dart';
-import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
-import '../../../core/widgets/custome_arrow_back_button.dart';
+import 'package:patient_app/main.dart';
+import 'package:patient_app/screens/patient_screens/add_appointment_view/widgets/custom_app_bar.dart';
+import 'package:patient_app/screens/patient_screens/add_appointment_view/widgets/dates_list_view.dart';
+import 'package:patient_app/screens/patient_screens/add_appointment_view/widgets/times_buttons_section.dart';
+import '../../../core/api/services/local/cache_helper.dart';
+import '../../../core/functions/custome_snack_bar.dart';
 import 'cubit/add_appointment_cubit.dart';
 import 'cubit/add_appointment_states.dart';
 
 class AddAppointmentView extends StatelessWidget {
   static const route = 'AddAppointmentView';
+
   const AddAppointmentView({super.key});
 
   @override
@@ -32,7 +33,6 @@ class AddAppointmentView extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
-            backgroundColor: defaultColor,
             body: AddAppointmentViewBody(doctorModel: doctorModel),
           ),
         ),
@@ -47,23 +47,38 @@ class AddAppointmentViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddAppointmentCubit, AddAppointmentStates>(
-      builder: (context, state) {
-        if (state is AddAppointmentFailureState) {
-          return CustomeErrorWidget(
-            errorMsg: state.failureMsg,
+    return BlocConsumer<AddAppointmentCubit, AddAppointmentStates>(
+      listener: (context, state) {
+        if (state is AddAppointmentSuccessState) {
+          CustomeSnackBar.showSnackBar(
+            context,
+            msg: 'Appointment Added Successfully',
+            color: Colors.green,
+            fontSize: 16.sp,
           );
-        } else if (state is AddAppointmentSuccessState) {
-          // Navigator.popUntil(
-          //   context,
-          //   ModalRoute.withName(HomePatientView.route),
-          // );
-          return const HomePatientView();
-          // _Body(
-          //   key: key,
-          //   doctorModel: doctorModel,
-          // );
-        } else if (state is AddAppointmentLodgingState) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            BlocProvider.of<AddAppointmentCubit>(context).close();
+            Navigator.popUntil(context, (route) => route.isFirst);
+          });
+        } else if (state is AddAppointmentFailureState) {
+          CustomeSnackBar.showErrorSnackBar(context, msg: state.failureMsg);
+        }
+      },
+      builder: (context, state) {
+        // if (state is AddAppointmentFailureState) {
+        //   return CustomeErrorWidget(
+        //     errorMsg: state.failureMsg,
+        //   );
+        // }
+        //  else if (state is AddAppointmentSuccessState) {
+        //   SchedulerBinding.instance.addPostFrameCallback((_) {
+        //     // int count = 0;
+        //     BlocProvider.of<AddAppointmentCubit>(context).close();
+        //     Navigator.popUntil(context, (route) => route.isFirst);
+        //   });
+        //   return const HomePatientView();
+        // }
+        if (state is AddAppointmentLodgingState) {
           return const CustomeProgressIndicator();
         } else {
           return _Body(
@@ -90,341 +105,124 @@ class _Body extends StatelessWidget {
       listen: false,
     );
     cubit.createDatesList();
-    return Column(
+    return Stack(
       children: [
-        SizedBox(
-          height: 200.h,
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 15.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _CustomAppBar(key: key),
-                const Spacer(),
-                _DatesListView(
-                  addAppointmentCubit: cubit,
-                  key: key,
-                )
-              ],
-            ),
-          ),
+        Container(
+          width: screenSize.width,
+          height: screenSize.height,
+          color: defaultColor,
         ),
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.r),
-                topRight: Radius.circular(25.r),
-              ),
-              color: Colors.white,
-            ),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+        Column(
+          children: [
+            SizedBox(
+              height: 200.h,
+              width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 15.w),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _TimesButtons(addAppointmentCubit: cubit),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Form(
-                      key: cubit.formKey,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'required';
-                          }
-                          return null;
-                        },
-                        maxLines: 3,
-                        controller: cubit.discretionController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.r),
-                          ),
-                          hintText: "Description . . .",
-                          hintStyle: TextStyle(
-                              fontSize: 20,
-                              color: defaultColor.withOpacity(.6)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    CustomeButton(
-                      onPressed: () {
-                        if (cubit.formKey.currentState!.validate()) {
-                          if (cubit.addAppointmentModel.date == null) {
-                            CustomeSnackBar.showSnackBar(
-                              context,
-                              msg: 'Please Select a Day',
-                              color: Colors.red,
-                            );
-                          } else if (cubit.addAppointmentModel.time == null) {
-                            CustomeSnackBar.showSnackBar(
-                              context,
-                              msg: 'Please Select a Time',
-                              color: Colors.red,
-                            );
-                          } else {
-                            cubit.addAppointment(
-                              token: CacheHelper.getData(key: 'Token'),
-                              departmentID: doctorModel.departmentID,
-                              doctorID: doctorModel.id,
-                            );
-                          }
-                        }
-
-                        // cubit.storeDoctorTimes(time: cubit.doctorTimes[1]);
-                        // log('\nTimes 1 = ${cubit.times11}');
-                        // log('\nTimes 2 = ${cubit.times22}');
-                      },
-                      text: 'ADD',
-                      width: double.infinity,
+                    CustomAppBar(doctorModel: doctorModel),
+                    const Spacer(),
+                    DatesListView(
+                      addAppointmentCubit: cubit,
+                      key: key,
                     )
                   ],
                 ),
               ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TimesButtons extends StatelessWidget {
-  const _TimesButtons({
-    required this.addAppointmentCubit,
-  });
-
-  final AddAppointmentCubit addAppointmentCubit;
-
-  @override
-  Widget build(BuildContext context) {
-    if (addAppointmentCubit.selectIndexDay != null) {
-      return addAppointmentCubit.times11.isNotEmpty &&
-              addAppointmentCubit.times22.isNotEmpty
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(
-                2,
-                (indexR) => Column(
-                  children: List.generate(
-                    indexR == 0
-                        ? addAppointmentCubit.times11.length
-                        : addAppointmentCubit.times22.length,
-                    (index) => _timeDialogButton(
-                      context,
-                      onTap: () {
-                        addAppointmentCubit.selectTime(
-                            index: index, indexR: indexR);
-                      },
-                      time: indexR == 0
-                          ? addAppointmentCubit.times11[index]
-                          : addAppointmentCubit.times22[index],
-                      selectIndexTime:
-                          addAppointmentCubit.selectIndexTime != null
-                              ? addAppointmentCubit.selectIndexTime!.toInt()
-                              : null,
-                      timeSelected:
-                          addAppointmentCubit.addAppointmentModel.time,
-                      index: index,
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.r),
+                    topRight: Radius.circular(25.r),
+                  ),
+                  color: Colors.white,
+                ),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TimesButtons(addAppointmentCubit: cubit),
+                        // cubit.times11.length < 6
+                        //     ?
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        // SizedBox(
+                        //     height: cubit.times11.isNotEmpty ? 70.h : 10.h,
+                        //   )
+                        // : SizedBox(
+                        //     height: 10.h,
+                        //   ),
+                        Form(
+                          key: cubit.formKey,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return 'required';
+                              }
+                              return null;
+                            },
+                            maxLines: 3,
+                            controller: cubit.discretionController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.r),
+                              ),
+                              hintText: "Description . . .",
+                              hintStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: defaultColor.withOpacity(.6)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        CustomeButton(
+                          onPressed: () {
+                            if (cubit.formKey.currentState!.validate()) {
+                              if (cubit.addAppointmentModel.date == null) {
+                                CustomeSnackBar.showSnackBar(
+                                  context,
+                                  msg: 'Please Select a Day',
+                                  color: Colors.red,
+                                );
+                              } else if (cubit.addAppointmentModel.time ==
+                                  null) {
+                                CustomeSnackBar.showSnackBar(
+                                  context,
+                                  msg: 'Please Select a Time',
+                                  color: Colors.red,
+                                );
+                              } else {
+                                cubit.addAppointment(
+                                  token: CacheHelper.getData(key: 'Token'),
+                                  departmentID: doctorModel.departmentID,
+                                  doctorID: doctorModel.id,
+                                );
+                              }
+                            }
+                          },
+                          text: 'ADD',
+                          width: double.infinity,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            )
-          : SizedBox(
-              height: 265.h,
-              child: const Center(
-                child: Text(
-                  'No Availabll Times',
-                  style: TextStyle(fontSize: 30, color: Colors.black54),
-                ),
-              ),
-            );
-    } else {
-      return SizedBox(
-        height: 265.h,
-        child: const Center(
-          child: Text(
-            'Please Select Day',
-            style: TextStyle(fontSize: 30, color: Colors.black54),
-          ),
-        ),
-      );
-    }
-  }
-}
-
-Widget _timeDialogButton(
-  BuildContext context, {
-  required void Function() onTap,
-  required String time,
-  int? selectIndexTime,
-  required int index,
-  String? timeSelected,
-  // required String value,
-}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 5),
-    child: InkWell(
-      // splashColor: Colors.amber,
-      borderRadius: BorderRadius.circular(25.r),
-      onTap: onTap,
-      child: Container(
-        width: 150.w,
-        // margin: const EdgeInsets.only(bottom: 5),
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: selectIndexTime == index && timeSelected == time
-                  ? Colors.green
-                  : Colors.black),
-          borderRadius: BorderRadius.circular(25.r),
-          color: selectIndexTime == index && timeSelected == time
-              ? Colors.grey.shade200
-              : Colors.white24,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Text(
-              time,
-              style: TextStyles.textStyle20.copyWith(
-                  color: selectIndexTime == index && timeSelected == time
-                      ? Colors.green
-                      : defaultColor),
             ),
-          ),
+          ],
         ),
-      ),
-    ),
-  );
-}
-
-class _DatesListView extends StatelessWidget {
-  const _DatesListView({
-    super.key,
-    required this.addAppointmentCubit,
-  });
-
-  final AddAppointmentCubit addAppointmentCubit;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          addAppointmentCubit.dates.length,
-          (index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-            child: InkWell(
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              onTap: () {
-                addAppointmentCubit.selectDay(
-                    index: index, day: addAppointmentCubit.days[index]);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(5),
-                height: 75.h,
-                width: 85.w,
-                decoration: BoxDecoration(
-                  color: addAppointmentCubit.selectIndexDay != index
-                      ? Colors.white24
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        addAppointmentCubit.days[index],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: addAppointmentCubit.selectIndexDay != index
-                                ? Colors.white
-                                : Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize:
-                                addAppointmentCubit.days[index] == 'Wednesday'
-                                    ? 13.sp
-                                    : 14.sp),
-                      ),
-                      Text(
-                        addAppointmentCubit.dates[index],
-                        textAlign: TextAlign.center,
-                        style: TextStyles.textStyle16.copyWith(
-                            fontSize: 12.sp,
-                            color: addAppointmentCubit.selectIndexDay != index
-                                ? Colors.white
-                                : Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ]),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CustomAppBar extends StatelessWidget {
-  const _CustomAppBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 90.w,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              CustomeImage(
-                // image: AppAssets.defaultImage,
-                height: 40.h,
-                width: 45.w,
-                borderRadius: BorderRadius.circular(50.r),
-              ),
-              Positioned(
-                right: 20.w,
-                child: CustomeImage(
-                  // image: AppAssets.loginImage,
-                  height: 40.h,
-                  width: 45.w,
-                  borderRadius: BorderRadius.circular(50.r),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Text(
-          'Add Appointment',
-          style: TextStyles.textStyle20.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-          ),
-        ),
-        const Spacer(),
-        const CustomArrowBackIconButton(),
       ],
     );
   }

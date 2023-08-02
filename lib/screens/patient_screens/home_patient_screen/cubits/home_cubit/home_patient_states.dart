@@ -26,11 +26,13 @@ class GetDoctorsAndDepartmentsSuccess extends HomePatientStates {
     required this.departments,
   });
 
-  List<DoctorModel> getDepartmentDoctors({int? departmentID}) {
+  List<DoctorModel> getDepartmentDoctors(
+      {int? departmentID, String? departmentImg}) {
     List<DoctorModel> doctors = [];
     if (departmentID != null) {
       for (DoctorModel item in this.doctors) {
         if (item.departmentID == departmentID) {
+          item.departmentImage = departmentImg;
           doctors.add(item);
         }
       }

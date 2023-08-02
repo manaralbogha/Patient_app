@@ -51,6 +51,7 @@ class CustomeNetworkImage extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
   final EdgeInsetsGeometry? margin;
   final Color? color;
+  final BoxFit? fit;
   const CustomeNetworkImage({
     super.key,
     this.imageUrl,
@@ -60,6 +61,7 @@ class CustomeNetworkImage extends StatelessWidget {
     this.iconSize,
     this.margin,
     this.color,
+    this.fit,
   });
 
   @override
@@ -73,7 +75,7 @@ class CustomeNetworkImage extends StatelessWidget {
         borderRadius: borderRadius,
         image: imageUrl != null
             ? DecorationImage(
-                fit: BoxFit.scaleDown,
+                fit: fit ?? BoxFit.scaleDown,
                 image:
                     NetworkImage('http://192.168.43.37:8000/storage/$imageUrl'),
               )

@@ -228,7 +228,7 @@ class _Body extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 60.h,
+                          height: 80.h,
                           width: screenSize.width,
                         ),
                         Align(
@@ -246,9 +246,10 @@ class _Body extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Cardiac Surgery Doctor',
+                            // 'Cardiac Surgery Doctor',
+                            '${doctorModel.specialty} Doctor',
                             style: TextStyle(
-                              fontSize: 13.h,
+                              fontSize: 16.h,
                               fontWeight: FontWeight.w500,
                               color: Colors.black45,
                             ),
@@ -327,6 +328,8 @@ class _Body extends StatelessWidget {
                               AddAppointmentView.route,
                               arguments: doctorModel,
                             );
+                            // log('\nDoctorIMG${doctorModel.imagePath}');
+                            // log('\nDoctorIMG${doctorModel.departmentImage}');
                           },
                         ),
                         SizedBox(height: 25.h),
@@ -358,12 +361,22 @@ class _Body extends StatelessWidget {
               child: Row(
                 children: [
                   const Expanded(child: SizedBox()),
-                  CustomeImage(
-                    borderRadius: BorderRadius.circular(50.h),
-                    margin: EdgeInsets.only(top: screenSize.height * .16),
-                    height: 100.h,
-                    width: 95.h,
-                  ),
+                  doctorModel.imagePath == 'default'
+                      ? CustomeImage(
+                          borderRadius: BorderRadius.circular(80.h),
+                          margin: EdgeInsets.only(top: screenSize.height * .16),
+                          height: 120.h,
+                          width: 115.h,
+                          iconSize: 50.sp,
+                        )
+                      : CustomeNetworkImage(
+                          imageUrl: doctorModel.imagePath,
+                          borderRadius: BorderRadius.circular(80.h),
+                          margin: EdgeInsets.only(top: screenSize.height * .16),
+                          height: 120.h,
+                          width: 115.h,
+                          fit: BoxFit.cover,
+                        ),
                   const Expanded(child: SizedBox()),
                 ],
               ),

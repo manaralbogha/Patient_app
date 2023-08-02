@@ -10,6 +10,7 @@ class DoctorModel {
   final int review;
   final int userID;
   final User user;
+  String? departmentImage;
 
   DoctorModel({
     required this.id,
@@ -21,6 +22,7 @@ class DoctorModel {
     required this.review,
     required this.userID,
     required this.user,
+    this.departmentImage,
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> jsonData) {
