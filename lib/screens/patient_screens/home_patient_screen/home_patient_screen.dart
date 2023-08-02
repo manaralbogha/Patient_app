@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/models/appointment_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
-import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
-import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/cubits/my_appointments_cubit/my_appointments_cubit.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_doctor_item.dart';
-import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_drawer_button.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/custom_drawer.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/departments_list_view.dart';
+import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/doctors_grid_view.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/widgets/my_appointment_item.dart';
-import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
 import 'cubits/home_cubit/home_patient_cuibt.dart';
 import 'cubits/home_cubit/home_patient_states.dart';
 
@@ -27,12 +25,6 @@ class HomePatientView extends StatefulWidget {
 class _HomePatientViewState extends State<HomePatientView> {
   int _index = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // @override
-  // void initState() {
-  //   FirebaseAPIs.getFirebaseMessagingToken();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,71 +45,10 @@ class _HomePatientViewState extends State<HomePatientView> {
               BlocProvider.of<MyAppointmentsCubit>(context);
           return Scaffold(
             key: _scaffoldKey,
-            drawer: Drawer(
-              width: 250.w,
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 180.h,
-                    color: Colors.transparent,
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: CustomeImage(
-                            height: 75.h,
-                            width: 80.w,
-                            borderRadius: BorderRadius.circular(50.r),
-                            iconSize: 60.sp,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.h,
-                        ),
-                        Center(
-                          child: Text(
-                            homeCubit.patientModel?.userModel?.firstName ?? '',
-                            style: TextStyle(
-                                fontSize: 25.sp, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 25.h),
-                  CustomDrawerButton(
-                    text: 'Consultations',
-                    icon: Icons.question_answer,
-                    onPressed: () {
-                      _scaffoldKey.currentState!.closeDrawer();
-                      Navigator.pushNamed(
-                          context, ShowAllConsultationView.route);
-                    },
-                  ),
-                  SizedBox(height: 15.h),
-                  CustomDrawerButton(
-                    text: 'Favourite',
-                    icon: Icons.favorite_outlined,
-                    // iconColor: Colors.red,
-                    onPressed: () {
-                      _scaffoldKey.currentState!.closeDrawer();
-                    },
-                  ),
-                  const Expanded(child: SizedBox()),
-                  CustomDrawerButton(
-                    text: 'Log Out',
-                    icon: Icons.logout,
-                    iconColor: Colors.red,
-                    onPressed: () {
-                      _scaffoldKey.currentState!.closeDrawer();
-                      homeCubit.logout(context);
-                    },
-                  ),
-                  SizedBox(height: 25.h),
-                ],
-              ),
+            drawer: CustomDrawer.getCustomDrawer(
+              context,
+              homeCubit: homeCubit,
+              scaffoldKey: _scaffoldKey,
             ),
             appBar: AppBar(
               shape: RoundedRectangleBorder(
@@ -153,8 +84,8 @@ class _HomePatientViewState extends State<HomePatientView> {
                 currentIndex: _index,
                 items: const [
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
+                    icon: Icon(Icons.home),
+                    label: 'Home',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.calendar_month_sharp),
@@ -164,10 +95,7 @@ class _HomePatientViewState extends State<HomePatientView> {
               ),
             ),
             body: _index == 0
-                ? const HomePatientViewBody(
-                    // homeCubit: homeCubit,
-                    // departments: state.,
-                    )
+                ? const HomePatientViewBody()
                 : AppointmentsViewBody(patientModel: homeCubit.patientModel),
           );
         },
@@ -198,7 +126,7 @@ class HomePatientViewBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _departmentsListView(state, homeCubit),
+                    DepartmentsListView(homeCubit: homeCubit, state: state),
                     SizedBox(
                       height: 10.h,
                     ),
@@ -206,130 +134,24 @@ class HomePatientViewBody extends StatelessWidget {
                 ),
               ),
               homeCubit.departmentID != null
-                  ? _doctorSliverGrid(state, homeCubit)
+                  ? DoctorsSliverGrid(homeCubit: homeCubit, state: state)
                   : const SliverFillRemaining(
-                      child: Center(child: Text('Please Select Department'))),
+                      child: Center(
+                        child: Text(
+                          'Please Select Department',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           );
         } else {
           return const CustomeProgressIndicator();
         }
       },
-    );
-  }
-
-  SliverGrid _doctorSliverGrid(
-    GetDoctorsAndDepartmentsSuccess state,
-    HomePatientCubit homeCubit,
-  ) {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200,
-        mainAxisExtent: 260.h,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 5.w,
-        mainAxisSpacing: 5.h,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return CustomDoctorItem(
-            doctorModel: state.getDepartmentDoctors(
-                departmentImg: (homeCubit.departments.isNotEmpty &&
-                        homeCubit.departmentIndex != null)
-                    ? homeCubit.departments[homeCubit.departmentIndex!].img
-                    : null,
-                departmentID: homeCubit.departmentID)[index],
-          );
-        },
-        childCount: state
-            .getDepartmentDoctors(departmentID: homeCubit.departmentID)
-            .length,
-      ),
-    );
-  }
-
-  Container _departmentsListView(
-      GetDoctorsAndDepartmentsSuccess state, HomePatientCubit homeCubit) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      height: 150.h,
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount: state.departments.length,
-        itemBuilder: (context, index) {
-          return SizedBox(
-            width: 130.w,
-            child: InkWell(
-              onTap: () {
-                if (homeCubit.departmentID != state.departments[index].id) {
-                  homeCubit.departmentIndex = index;
-                  homeCubit.viewDoctorsForDebarment(
-                    departmentsId: state.departments[index].id,
-                    departmentImage: state.departments[index].img,
-                  );
-                }
-              },
-              borderRadius: BorderRadius.circular(10.r),
-              splashColor: defaultColor,
-              child: Stack(
-                clipBehavior: Clip.none,
-                fit: StackFit.passthrough,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: homeCubit.departmentID ==
-                                state.departments[index].id
-                            ? Colors.green
-                            : Colors.grey,
-                        width: homeCubit.departmentID ==
-                                state.departments[index].id
-                            ? 2
-                            : 1,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                    ),
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        CustomeNetworkImage(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.r),
-                              topRight: Radius.circular(10.r)),
-                          // image: state.departments[index].img,
-                          width: double.infinity,
-                          height: 90.h,
-                          imageUrl: state.departments[index].img,
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Text(
-                          state.departments[index].name.toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (homeCubit.departmentID != null &&
-                      homeCubit.departmentID == state.departments[index].id)
-                    const Positioned(
-                      top: -5,
-                      right: -5,
-                      child: Icon(
-                        Icons.check_circle_outline_rounded,
-                        color: Colors.green,
-                      ),
-                    )
-                ],
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 }
