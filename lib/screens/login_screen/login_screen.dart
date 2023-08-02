@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/functions/custome_snack_bar.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/home_patient_screen.dart';
 import 'package:patient_app/screens/register_screen/register_screen.dart';
 import '../../core/api/services/local/cache_helper.dart';
@@ -8,7 +9,6 @@ import '../../core/styles/app_colors.dart';
 import '../../core/styles/text_styles.dart';
 import '../../core/utils/app_assets.dart';
 import '../../core/widgets/custome_button.dart';
-import '../../core/widgets/custome_error_widget.dart';
 import '../../core/widgets/custome_image.dart';
 import '../../core/widgets/custome_progress_indicator.dart';
 import '../../core/widgets/custome_text_field.dart';
@@ -42,12 +42,15 @@ class LoginViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginStates>(
+    return BlocConsumer<LoginCubit, LoginStates>(
+      listener: (context, state) {
+        if (state is LoginFailure) {
+          CustomeSnackBar.showErrorSnackBar(context, msg: state.failureMsg);
+        }
+      },
       builder: (context, state) {
         if (state is LoginLoading) {
           return const CustomeProgressIndicator();
-        } else if (state is LoginFailure) {
-          return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is LoginSuccess) {
           CacheHelper.saveData(key: 'Token', value: state.loginModel.token);
           CacheHelper.saveData(key: 'Role', value: state.loginModel.role);

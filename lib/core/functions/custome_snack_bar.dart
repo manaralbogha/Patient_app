@@ -47,22 +47,11 @@ abstract class CustomeSnackBar {
     Duration? duration,
     Color? color = Colors.red,
     double? fontSize,
-    bool hasAction = true,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         margin: EdgeInsets.only(bottom: 200.h, left: 10.w, right: 10.w),
         duration: duration ?? const Duration(minutes: 2),
-        // action: hasAction
-        //     ? SnackBarAction(
-        //         backgroundColor: Colors.white,
-        //         textColor: Colors.black,
-        //         label: 'Hide',
-        //         onPressed: () {
-        //           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        //         },
-        //       )
-        //     : null,
         content: Column(
           children: [
             Row(
@@ -84,7 +73,6 @@ abstract class CustomeSnackBar {
               ],
             ),
             SizedBox(
-              height: 220.h,
               child: SingleChildScrollView(
                 child: Text(
                   msg,
