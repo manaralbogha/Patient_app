@@ -69,7 +69,7 @@ class MyAppointmentItem extends StatelessWidget {
                     _TextItem(
                       text:
                           '${appointmentModel.date} - At ${appointmentModel.time}',
-                      width: 190.w,
+                      width: 170.w,
                       fontSize: appointmentModel.date.contains('Wednesday')
                           ? 11.w
                           : 13.w,
@@ -118,7 +118,7 @@ class MyAppointmentItem extends StatelessWidget {
                     _TextItem(
                       text: '${appointmentModel.status}...',
                       color: Colors.green,
-                      width: 120.w,
+                      width: 90.w,
                     ),
                     Visibility(
                       visible: appointmentModel.status == 'waiting',
