@@ -15,8 +15,8 @@ import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
 import 'package:patient_app/main.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_cubit.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
+import 'package:patient_app/screens/patient_screens/doctor_details_screen/widgets/doctor_details_button.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/show_all_consultation.dart';
-
 import '../add_appointment_view/add_appointment_view.dart';
 
 class DoctorDetailsView extends StatelessWidget {
@@ -29,7 +29,11 @@ class DoctorDetailsView extends StatelessWidget {
     final DoctorModel doctorModel =
         ModalRoute.of(context)?.settings.arguments as DoctorModel;
     return BlocProvider(
-      create: (context) => DoctorDetailsCubit(),
+      create: (context) => DoctorDetailsCubit()
+        ..checkIsFavourited(
+          token: CacheHelper.getData(key: 'Token'),
+          doctorID: doctorModel.id,
+        ),
       child: Scaffold(
         body: DoctorDetailsViewBody(doctorModel: doctorModel),
         floatingActionButton:
@@ -384,52 +388,6 @@ class _Body extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class DoctorDetailsButton extends StatelessWidget {
-  final String text;
-  final Icon icon;
-  final void Function() onPressed;
-  const DoctorDetailsButton({
-    super.key,
-    required this.text,
-    required this.icon,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.h),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                text,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12.w,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              icon,
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

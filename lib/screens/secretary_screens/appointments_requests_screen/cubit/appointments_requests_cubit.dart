@@ -6,7 +6,7 @@ class AppointmentsRequestsCubit extends Cubit<AppointmentsRequestsStates> {
   AppointmentsRequestsCubit() : super(AppointmentsRequestsLoading());
 
   Future<void> getAppointmentsRequests({required String token}) async {
-    (await GetAppointmentsRequestsService.getAppointmentsRequestsService(
+    (await GetAllAppointmentsRequestsService.getAppointmentsRequestsService(
             token: token))
         .fold(
       (failure) {

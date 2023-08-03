@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/screens/patient_screens/favourite_screen/favourite_screen.dart';
 import '../../../../core/widgets/custome_image.dart';
 import '../../show_all_consultation/show_all_consultation.dart';
 import '../cubits/home_cubit/home_patient_cuibt.dart';
@@ -63,6 +64,7 @@ abstract class CustomDrawer {
             // iconColor: Colors.red,
             onPressed: () {
               scaffoldKey.currentState!.closeDrawer();
+              Navigator.pushNamed(context, FavouriteView.route);
             },
           ),
           const Expanded(child: SizedBox()),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/core/models/appointment_model.dart';
 import 'package:patient_app/core/models/patient_model.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
 import 'package:patient_app/core/widgets/custome_progress_indicator.dart';
@@ -34,7 +33,7 @@ class _HomePatientViewState extends State<HomePatientView> {
           create: (context) => HomePatientCubit()..fetchMyInfo(),
         ),
         BlocProvider(
-          create: (context) => MyAppointmentsCubit()..getMyAppointments(),
+          create: (context) => MyAppointmentsCubit(),
         ),
       ],
       child: BlocBuilder<HomePatientCubit, HomePatientStates>(
@@ -74,9 +73,10 @@ class _HomePatientViewState extends State<HomePatientView> {
                 onTap: (value) {
                   setState(() {
                     if (value == 0) {
-                      homeCubit.getDoctors();
+                      homeCubit.getDoctorsAndDepartments();
                     } else {
-                      appointmentsCubit.getMyAppointments();
+                      appointmentsCubit.getMyAppointments(
+                          patientID: homeCubit.patientModel!.id!);
                     }
                     _index = value;
                   });
@@ -169,24 +169,15 @@ class AppointmentsViewBody extends StatelessWidget {
         } else if (state is MyAppointmentsFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
         } else if (state is MyAppointmentsSuccess) {
-          if (state
-              .getMyAppointments(patientID: patientModel!.id!)
-              .isNotEmpty) {
+          if (state.appointments.isNotEmpty) {
             return ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                List<AppointmentModel> myAppointments =
-                    state.getMyAppointments(patientID: patientModel!.id!);
                 return MyAppointmentItem(
-                  appointmentID: myAppointments[index].id,
-                  time:
-                      '${myAppointments[index].date} - ${myAppointments[index].time}',
-                  doctor: 'Abdullah Nahlawi',
-                  status: '${myAppointments[index].status}...',
+                  appointmentModel: state.appointments[index],
                 );
               },
-              itemCount: patientModel != null
-                  ? state.getMyAppointments(patientID: patientModel!.id!).length
-                  : state.appointments.length,
+              itemCount: state.appointments.length,
             );
           } else {
             return Center(

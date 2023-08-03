@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patient_app/screens/patient_screens/favourite_screen/favourite_screen.dart';
 import '../../screens/login_screen/login_screen.dart';
 import '../../screens/patient_screens/add_appointment_view/add_appointment_view.dart';
 import '../../screens/patient_screens/doctor_details_screen/doctor_details_screen.dart';
@@ -15,6 +16,7 @@ abstract class AppRouter {
     AddAppointmentView.route: (context) => const AddAppointmentView(),
     HomePatientView.route: (context) => const HomePatientView(),
     DoctorDetailsView.route: (context) => const DoctorDetailsView(),
+    FavouriteView.route: (context) => const FavouriteView(),
     AppointmentsRequestsView.route: (context) =>
         AppointmentsRequestsView(token: CacheHelper.getData(key: 'Token')),
     ShowAllConsultationView.route: (context) => const ShowAllConsultationView(),
