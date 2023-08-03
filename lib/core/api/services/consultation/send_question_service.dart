@@ -2,17 +2,16 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import '../../../errors/failures.dart';
-import '../../../models/consultation_model.dart';
 import '../../http_api_services.dart';
 
 abstract class SendQuestionService {
-  static Future<Either<Failure, ConsultationModel>> sendQuestion({
+  static Future<Either<Failure, void>> sendQuestion({
     required String doctorID,
     required String question,
     required String token,
   }) async {
     try {
-      var data = await ApiServices.post(
+      await ApiServices.post(
         endPoint: 'question/store',
         body: {
           'question': question,
@@ -21,7 +20,7 @@ abstract class SendQuestionService {
         token: token,
       );
 
-      return right(ConsultationModel.fromJson(data['consultaion']));
+      return right(null);
     } catch (ex) {
       log('Exception: there is an error in sendQuestion method');
       log('\n $ex');

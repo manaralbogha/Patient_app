@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:patient_app/screens/patient_screens/favourite_screen/favourite_screen.dart';
 import '../../../../core/widgets/custome_image.dart';
+import '../../favourite_screen/favourite_screen.dart';
 import '../../show_all_consultation/show_all_consultation.dart';
 import '../cubits/home_cubit/home_patient_cuibt.dart';
 import 'custom_drawer_button.dart';
@@ -61,7 +61,6 @@ abstract class CustomDrawer {
           CustomDrawerButton(
             text: 'Favourite',
             icon: Icons.favorite_outlined,
-            // iconColor: Colors.red,
             onPressed: () {
               scaffoldKey.currentState!.closeDrawer();
               Navigator.pushNamed(context, FavouriteView.route);
