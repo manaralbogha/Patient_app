@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:patient_app/core/models/appointment_model.dart';
 import 'package:patient_app/screens/patient_screens/home_patient_screen/cubits/my_appointments_cubit/my_appointments_cubit.dart';
 import '../../../../core/widgets/custome_image.dart';
 
 class MyAppointmentItem extends StatelessWidget {
-  final String time;
-  final String doctor;
-  final String status;
-  final int appointmentID;
+  final AppointmentModel appointmentModel;
+  // final String time;
+  // final String doctor;
+  // final String status;
+  // final int appointmentID;
+  // final int patientID;
   const MyAppointmentItem({
     super.key,
-    required this.time,
-    required this.doctor,
-    required this.status,
-    required this.appointmentID,
+    required this.appointmentModel,
+    // required this.time,
+    // required this.doctor,
+    // required this.status,
+    // required this.appointmentID,
+    // required this.patientID,
   });
 
   @override
@@ -37,7 +42,8 @@ class MyAppointmentItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomeImage(
+            CustomeNetworkImage(
+              imageUrl: appointmentModel.departmentModel.img,
               borderRadius: BorderRadius.circular(10),
               width: 70.h,
               height: 90.h,
@@ -51,8 +57,26 @@ class MyAppointmentItem extends StatelessWidget {
               children: [
                 // const _TextItem(text: 'From: Abdullah Nahlawi xxxxxxxxx'),
                 // SizedBox(height: 8.w),
-                _TextItem(text: 'Time: $time'),
-                SizedBox(height: 8.w),
+                Row(
+                  children: [
+                    _TextItem(
+                      text: 'Time: ',
+                      color: Colors.black.withOpacity(.6),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.w,
+                      width: 50.w,
+                    ),
+                    _TextItem(
+                      text:
+                          '${appointmentModel.date} - At ${appointmentModel.time}',
+                      width: 190.w,
+                      fontSize: appointmentModel.date.contains('Wednesday')
+                          ? 11.w
+                          : 13.w,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.w),
                 Row(
                   children: [
                     CustomeImage(
@@ -62,9 +86,22 @@ class MyAppointmentItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     SizedBox(width: 5.w),
-                    _TextItem(
-                      text: 'To: Dr. $doctor',
-                      width: 208.w,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _TextItem(
+                          text: 'Doctor: ',
+                          color: Colors.black.withOpacity(.6),
+                          fontSize: 15.w,
+                          fontWeight: FontWeight.bold,
+                          width: 60.w,
+                        ),
+                        _TextItem(
+                          // text: 'To: Dr. ${appointmentModel.d}',
+                          text: 'Abdullah Nahlawi',
+                          width: 150.w,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -72,18 +109,22 @@ class MyAppointmentItem extends StatelessWidget {
                 Row(
                   children: [
                     _TextItem(
-                      text: 'Status:',
-                      width: 65.w,
+                      text: 'Status: ',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black.withOpacity(.6),
+                      fontSize: 15.w,
+                      width: 60.w,
                     ),
                     _TextItem(
-                      text: status,
+                      text: '${appointmentModel.status}...',
                       color: Colors.green,
-                      width: 100.w,
+                      width: 120.w,
                     ),
                     Visibility(
-                      visible: status == 'waiting...',
+                      visible: appointmentModel.status == 'waiting',
                       child: _CancelButton(
-                        appointmentID: appointmentID,
+                        patientID: appointmentModel.patientId,
+                        appointmentID: appointmentModel.id,
                       ),
                     ),
                   ],
@@ -99,7 +140,8 @@ class MyAppointmentItem extends StatelessWidget {
 
 class _CancelButton extends StatelessWidget {
   final int appointmentID;
-  const _CancelButton({required this.appointmentID});
+  final int patientID;
+  const _CancelButton({required this.appointmentID, required this.patientID});
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +149,10 @@ class _CancelButton extends StatelessWidget {
       builder: (context, state) {
         return InkWell(
           onTap: () {
-            BlocProvider.of<MyAppointmentsCubit>(context)
-                .cancelAppointment(appointmentID: appointmentID);
+            BlocProvider.of<MyAppointmentsCubit>(context).cancelAppointment(
+              appointmentID: appointmentID,
+              patientID: patientID,
+            );
           },
           highlightColor: Colors.black.withOpacity(.7),
           borderRadius: BorderRadius.circular(30.h),
@@ -138,7 +182,15 @@ class _TextItem extends StatelessWidget {
   final String text;
   final double? width;
   final Color? color;
-  const _TextItem({required this.text, this.width, this.color});
+  final FontWeight? fontWeight;
+  final double? fontSize;
+  const _TextItem({
+    required this.text,
+    this.width,
+    this.color,
+    this.fontWeight,
+    this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +201,8 @@ class _TextItem extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: TextStyle(
-          fontSize: 17,
+          fontWeight: fontWeight,
+          fontSize: fontSize ?? 13.w,
           color: color ?? Colors.black.withOpacity(.46),
         ),
       ),

@@ -22,13 +22,13 @@ class MyAppointmentsSuccess extends MyAppointmentsStates {
 
   const MyAppointmentsSuccess({required this.appointments});
 
-  List<AppointmentModel> getMyAppointments({required int patientID}) {
-    List<AppointmentModel> myAppointments = [];
-    for (AppointmentModel item in appointments) {
-      if (patientID == item.patientId) {
-        myAppointments.add(item);
-      }
-    }
-    return myAppointments;
-  }
+  // List<AppointmentModel> getMyAppointments({required int patientID}) {
+  //   List<AppointmentModel> myAppointments = [];
+  //   for (AppointmentModel item in appointments) {
+  //     if (patientID == item.patientId) {
+  //       myAppointments.add(item);
+  //     }
+  //   }
+  //   return myAppointments;
+  // }
 }

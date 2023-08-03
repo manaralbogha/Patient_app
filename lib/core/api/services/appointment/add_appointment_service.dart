@@ -4,15 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:patient_app/core/api/http_api_services.dart';
 import 'package:patient_app/core/errors/failures.dart';
 import 'package:patient_app/core/models/add_appointment_model.dart';
-import 'package:patient_app/core/models/appointment_model.dart';
 
 abstract class AddAppointmentService {
-  static Future<Either<Failure, AppointmentModel>> addAppointment({
+  static Future<Either<Failure, void>> addAppointment({
     required String token,
     required AddAppointmentModel addAppointmentModel,
   }) async {
     try {
-      var data = await ApiServices.post(
+      await ApiServices.post(
         endPoint: 'storeAppointment',
         body: {
           'date': addAppointmentModel.date,
@@ -24,7 +23,7 @@ abstract class AddAppointmentService {
         token: token,
       );
 
-      return right(AppointmentModel<String>.fromJson(data['Appointment']));
+      return right(null);
     } catch (ex) {
       log('Exception: there is an error in addAppointment method');
       if (ex is DioException) {

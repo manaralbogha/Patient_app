@@ -8,7 +8,7 @@ class PatientModel {
   final String? fcmToken;
   final String? gender;
   final String? birthDate;
-  final User? userModel;
+  final UserModel? userModel;
 
   PatientModel({
     this.id,
@@ -30,7 +30,7 @@ class PatientModel {
       fcmToken: jsonData['FCMToken'],
       gender: jsonData['gender'],
       birthDate: jsonData['birth_date'],
-      userModel: User.fromJson(jsonData['user']),
+      userModel: UserModel.fromJson(jsonData['user']),
     );
   }
 }
