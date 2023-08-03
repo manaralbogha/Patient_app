@@ -20,11 +20,6 @@ class CustomDoctorItem extends StatelessWidget {
             onTap: () async {
               Navigator.pushNamed(context, DoctorDetailsView.route,
                   arguments: doctorModel);
-
-              // final fcmToken = await FirebaseMessaging.instance.getToken();
-              // log('PushToken = \n$fcmToken');
-
-              // await FirebaseAPIs.getFirebaseMessagingToken();
             },
             highlightColor: defaultColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(15),
@@ -38,6 +33,7 @@ class CustomDoctorItem extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    SizedBox(height: 6.h),
                     doctorModel.imagePath == 'default'
                         ? CustomeImage(
                             image: 'assets/images/register_doctor_image3.jpg',
@@ -66,38 +62,30 @@ class CustomDoctorItem extends StatelessWidget {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 17.w,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 14.w,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     // SizedBox(height: 5.w),
                     Text(
-                      'Cardiac Surgery Doctor',
+                      '${doctorModel.specialty} Doctor',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 13.w,
+                        fontSize: 10.w,
                         color: Colors.grey,
                       ),
                     ),
                     SizedBox(height: 5.w),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        doctorModel.review,
-                        (index) => const Text('⭐️'),
-                      ),
-                      // [
-                      //   Text(
-                      //     '(${doctorModel.review}.0 / 5) ⭐️',
-                      //     style: TextStyle(
-                      //       fontSize: 12.h,
-                      //       color: Colors.grey,
-                      //     ),
-                      //   ),
-                      // ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: List.generate(
+                    //     doctorModel.review,
+                    //     (index) => const Text('⭐️'),
+                    //   ),
+
+                    // ),
                   ],
                 ),
               ),
@@ -115,6 +103,16 @@ class CustomDoctorItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(40.w),
           ),
         ),
+        // Positioned(
+        //   left: 20.h,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: List.generate(
+        //       doctorModel.review,
+        //       (index) => const Text('⭐️'),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
