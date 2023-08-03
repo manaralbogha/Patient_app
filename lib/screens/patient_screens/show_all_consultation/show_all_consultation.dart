@@ -5,6 +5,7 @@ import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/models/consultation_model.dart';
 import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
+import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/cuibt/show_all_consultation_cubit.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/cuibt/show_all_consultation_states.dart';
 import '../../../core/widgets/custome_progress_indicator.dart';
@@ -83,7 +84,7 @@ class _Body extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -108,20 +109,47 @@ class _Body extends StatelessWidget {
                           color: defaultColor,
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            CustomeImage(
+                              width: 50.w,
+                              height: 45.h,
+                              borderRadius: BorderRadius.circular(50.r),
+                              margin: const EdgeInsets.all(10),
+                            ),
                             SizedBox(
-                              width: 240.w,
-                              child: Text(
-                                model![index].answer.toString() == "null"
-                                    ? 'No Answer Yet '
-                                    : model![index].answer.toString(),
-                                style: TextStyle(fontSize: 20.sp),
+                              width: 210.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 8.h,
+                                    ),
+                                    child: const Text(
+                                      'Dr.Manar Albogha',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                  Divider(
+                                    endIndent: 60.w,
+                                    height: 10.h,
+                                  ),
+                                  Text(
+                                    model![index].answer.toString() == "null"
+                                        ? 'No Answer Yet '
+                                        : model![index].answer.toString(),
+                                    style: TextStyle(fontSize: 20.sp),
+                                  ),
+                                ],
                               ),
                             ),
                             const Spacer(),
                             SizedBox(
-                              width: 80.w,
+                              width: 40.w,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -135,18 +163,18 @@ class _Body extends StatelessWidget {
                                           Icons.check_circle_outlined,
                                           color: Colors.green,
                                         ),
-                                  if (model![index].answer.toString() != "null")
-                                    Divider(
-                                      color: defaultColor,
-                                      height: 10.h,
-                                    ),
-                                  if (model![index].answer.toString() != "null")
-                                    Text(model![index].answerDate.toString()),
                                 ],
                               ),
                             ),
                           ],
                         ),
+                        if (model![index].answer.toString() != "null")
+                          Divider(
+                            color: defaultColor,
+                            height: 10.h,
+                          ),
+                        if (model![index].answer.toString() != "null")
+                          Text(model![index].answerDate.toString()),
                       ],
                     ),
                   ),
