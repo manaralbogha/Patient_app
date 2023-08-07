@@ -18,7 +18,7 @@ abstract class CustomDrawer {
         children: [
           Container(
             width: double.infinity,
-            height: 180.h,
+            height: 200.h,
             color: Colors.transparent,
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -33,7 +33,7 @@ abstract class CustomDrawer {
                   ),
                 ),
                 SizedBox(
-                  height: 30.h,
+                  height: 40.h,
                 ),
                 Center(
                   child: Text(
@@ -43,6 +43,13 @@ abstract class CustomDrawer {
                   ),
                 ),
               ],
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Center(
+            child: Text(
+              'Balance: ${homeCubit.patientModel?.wallet}',
+              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(height: 25.h),

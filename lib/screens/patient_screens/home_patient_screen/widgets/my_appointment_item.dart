@@ -29,12 +29,19 @@ class MyAppointmentItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CustomeNetworkImage(
-                imageUrl: appointmentModel.departmentModel.img,
-                borderRadius: BorderRadius.circular(10),
-                width: 70.h,
-                height: 90.h,
-              ),
+              appointmentModel.doctorModel.imagePath != 'default'
+                  ? CustomeNetworkImage(
+                      imageUrl: appointmentModel.doctorModel.imagePath,
+                      borderRadius: BorderRadius.circular(10),
+                      fit: BoxFit.fill,
+                      width: 70.h,
+                      height: 90.h,
+                    )
+                  : CustomeImage(
+                      borderRadius: BorderRadius.circular(10),
+                      width: 70.h,
+                      height: 90.h,
+                    ),
               SizedBox(
                 width: 10.w,
               ),
@@ -57,21 +64,28 @@ class MyAppointmentItem extends StatelessWidget {
                         text:
                             '${appointmentModel.date} - At ${appointmentModel.time}',
                         width: 170.w,
-                        fontSize: appointmentModel.date.contains('Wednesday')
-                            ? 11.w
-                            : 13.w,
+                        fontSize: 12.6.w,
                       ),
                     ],
                   ),
                   SizedBox(height: 12.w),
                   Row(
                     children: [
-                      CustomeImage(
-                        width: 20.h,
-                        height: 20.h,
-                        iconSize: 15.h,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                      appointmentModel.departmentModel.img != 'default'
+                          ? CustomeNetworkImage(
+                              imageUrl: appointmentModel.departmentModel.img,
+                              width: 25.h,
+                              height: 25.h,
+                              fit: BoxFit.cover,
+                              // iconSize: 15.h,
+                              borderRadius: BorderRadius.circular(30),
+                            )
+                          : CustomeImage(
+                              width: 25.h,
+                              height: 25.h,
+                              iconSize: 18.h,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                       SizedBox(width: 5.w),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -85,7 +99,8 @@ class MyAppointmentItem extends StatelessWidget {
                           ),
                           _TextItem(
                             // text: 'To: Dr. ${appointmentModel.d}',
-                            text: 'Abdullah Nahlawi',
+                            text:
+                                '${appointmentModel.doctorModel.user.firstName} ${appointmentModel.doctorModel.user.lastName}',
                             width: 150.w,
                           ),
                         ],

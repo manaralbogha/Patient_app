@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:patient_app/core/models/doctor_model.dart';
 
 abstract class DoctorDetailsStates extends Equatable {
   @override
@@ -13,6 +14,12 @@ class DoctorDetaisFailure extends DoctorDetailsStates {
   final String failureMsg;
 
   DoctorDetaisFailure({required this.failureMsg});
+}
+
+class FetchDoctorDetailsSuccess extends DoctorDetailsStates {
+  final DoctorModel doctorModel;
+
+  FetchDoctorDetailsSuccess({required this.doctorModel});
 }
 
 class FavouriteSuccessState extends DoctorDetailsStates {}

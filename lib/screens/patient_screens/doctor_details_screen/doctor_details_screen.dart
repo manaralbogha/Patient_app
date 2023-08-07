@@ -16,17 +16,18 @@ import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/widgets/consultation_bottom_sheet.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/widgets/doctor_details_button.dart';
+import 'package:patient_app/screens/patient_screens/favourite_screen/favourite_screen.dart';
 import '../add_appointment_view/add_appointment_view.dart';
 
 class DoctorDetailsView extends StatelessWidget {
   static const route = 'DoctorDetailsView';
-
   const DoctorDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final DoctorModel doctorModel =
-        ModalRoute.of(context)?.settings.arguments as DoctorModel;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final DoctorModel doctorModel = args[0];
+    final bool fromFavorite = args[1];
     return BlocProvider(
       create: (context) => DoctorDetailsCubit()
         ..checkIsFavourited(
@@ -34,7 +35,10 @@ class DoctorDetailsView extends StatelessWidget {
           doctorID: doctorModel.id,
         ),
       child: Scaffold(
-        body: DoctorDetailsViewBody(doctorModel: doctorModel),
+        body: DoctorDetailsViewBody(
+          doctorModel: doctorModel,
+          fromFavourite: fromFavorite,
+        ),
         floatingActionButton:
             BlocBuilder<DoctorDetailsCubit, DoctorDetailsStates>(
           builder: (context, state) => Visibility(
@@ -62,7 +66,12 @@ class DoctorDetailsView extends StatelessWidget {
 
 class DoctorDetailsViewBody extends StatelessWidget {
   final DoctorModel doctorModel;
-  const DoctorDetailsViewBody({super.key, required this.doctorModel});
+  final bool fromFavourite;
+  const DoctorDetailsViewBody({
+    super.key,
+    required this.doctorModel,
+    required this.fromFavourite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +81,16 @@ class DoctorDetailsViewBody extends StatelessWidget {
           return const CustomeProgressIndicator();
         } else if (state is DoctorDetaisFailure) {
           return CustomeErrorWidget(errorMsg: state.failureMsg);
+        } else if (state is FetchDoctorDetailsSuccess) {
+          return _Body(
+            doctorModel: state.doctorModel,
+            fromFavourite: fromFavourite,
+          );
         } else {
-          return _Body(doctorModel: doctorModel);
+          return _Body(
+            doctorModel: doctorModel,
+            fromFavourite: fromFavourite,
+          );
         }
       },
     );
@@ -82,7 +99,8 @@ class DoctorDetailsViewBody extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   final DoctorModel doctorModel;
-  const _Body({required this.doctorModel});
+  final bool fromFavourite;
+  const _Body({required this.doctorModel, required this.fromFavourite});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +117,13 @@ class _Body extends StatelessWidget {
             Positioned(
               right: screenSize.width * .85,
               top: 25.h,
-              child: const CustomArrowBackIconButton(),
+              child: CustomArrowBackIconButton(
+                onTap: fromFavourite
+                    ? () {
+                        Navigator.popAndPushNamed(context, FavouriteView.route);
+                      }
+                    : null,
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -172,7 +196,7 @@ class _Body extends StatelessWidget {
                                   );
                                 } else {
                                   cubit.deleteFromFavourite(
-                                    favouriteID: 6,
+                                    doctorID: doctorModel.id,
                                     token: CacheHelper.getData(key: 'Token'),
                                   );
                                 }
@@ -197,10 +221,15 @@ class _Body extends StatelessWidget {
                                     cubit.ratingValue =
                                         CustomDialogs.helperGetRatingIndex();
                                     Navigator.pop(context);
-                                    cubit.addEvaluation(
+                                    cubit
+                                        .addEvaluation(
                                       doctorID: doctorModel.id,
                                       token: CacheHelper.getData(key: 'Token'),
-                                    );
+                                    )
+                                        .then((value) {
+                                      cubit.getDoctorDetails(
+                                          userID: doctorModel.userID);
+                                    });
                                   },
                                 );
                               },

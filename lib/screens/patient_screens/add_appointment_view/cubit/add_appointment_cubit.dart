@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:patient_app/core/api/services/appointment/add_appointment_service.dart';
 import 'package:patient_app/core/api/services/appointment/get_all_doctors_times_service.dart';
+import 'package:patient_app/core/api/services/get_department_details_service.dart';
+import 'package:patient_app/core/models/doctor_model.dart';
 import 'package:patient_app/core/models/work_day_model.dart';
 import '../../../../core/models/add_appointment_model.dart';
 import '../../../../core/utils/constants.dart';
@@ -13,7 +15,6 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
   AddAppointmentCubit() : super(AddAppointmentInitial());
   List<String> dates = [];
   List<String> days = [];
-  List<String> apiDate = [];
   int? selectIndexDay;
   int? selectIndexTime;
   AddAppointmentModel addAppointmentModel = AddAppointmentModel();
@@ -22,20 +23,30 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
 
   List<WorkDayModel> doctorTimes = [];
 
-  Duration? diff;
+  // Duration? diff;
 
-  Future<void> fetchDoctorTimes({required int doctorID}) async {
+  Future<void> fetchDoctorTimes({required DoctorModel doctorModel}) async {
     emit(AddAppointmentLodgingState());
     (await GetAllDoctorsTimes.getAllDoctorsTimes(token: Constants.adminToken))
         .fold(
       (failure) {
         emit(AddAppointmentFailureState(failureMsg: failure.errorMessege));
       },
-      (allDoctorsTimes) {
+      (allDoctorsTimes) async {
         for (WorkDayModel item in allDoctorsTimes) {
-          if (doctorID == item.doctorID) {
+          if (doctorModel.id == item.doctorID) {
             doctorTimes.add(item);
           }
+        }
+        if (doctorModel.departmentImage == null) {
+          (await GetDepartmentDetailsService.getDepartmentDetails(
+                  id: doctorModel.departmentID))
+              .fold(
+            (failure) {},
+            (department) {
+              doctorModel.departmentImage = department.img;
+            },
+          );
         }
         emit(AddAppointmentInitial());
       },
@@ -180,5 +191,14 @@ class AddAppointmentCubit extends Cubit<AddAppointmentStates> {
         );
       },
     );
+  }
+
+  bool vaildWorkDay({required String day}) {
+    for (WorkDayModel item in doctorTimes) {
+      if (item.day == day) {
+        return true;
+      }
+    }
+    return false;
   }
 }

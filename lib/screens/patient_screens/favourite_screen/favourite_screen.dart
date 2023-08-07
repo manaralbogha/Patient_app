@@ -27,10 +27,6 @@ class FavouriteView extends StatelessWidget {
             'Favourite',
             style: TextStyle(fontSize: 20.w),
           ),
-          // actions: const [
-          //   Icon(Icons.notifications),
-          //   SizedBox(width: 5),
-          // ],
         ),
         body: const FavouriteViewBody(),
       ),
@@ -59,6 +55,7 @@ class FavouriteViewBody extends StatelessWidget {
             itemBuilder: (context, index) {
               return CustomDoctorItem(
                 doctorModel: state.doctors[index],
+                fromFavorite: true,
               );
             },
           );

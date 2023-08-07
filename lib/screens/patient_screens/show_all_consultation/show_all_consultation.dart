@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:patient_app/core/api/services/local/cache_helper.dart';
 import 'package:patient_app/core/models/consultation_model.dart';
-import 'package:patient_app/core/styles/app_colors.dart';
 import 'package:patient_app/core/widgets/custome_error_widget.dart';
-import 'package:patient_app/core/widgets/custome_image.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/cuibt/show_all_consultation_cubit.dart';
 import 'package:patient_app/screens/patient_screens/show_all_consultation/cuibt/show_all_consultation_states.dart';
+import 'package:patient_app/screens/patient_screens/show_all_consultation/widgets/consultation_item.dart';
 import '../../../core/widgets/custome_progress_indicator.dart';
 
 class ShowAllConsultationView extends StatelessWidget {
@@ -70,131 +69,8 @@ class _Body extends StatelessWidget {
     return (model != null && model!.isNotEmpty)
         ? ListView.builder(
             itemCount: model!.length,
-            itemBuilder: (context, index) => Stack(
-              children: [
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 25.h, horizontal: 10.w),
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: defaultColor),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  // height: 150.h,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: 240.w,
-                              child: Text(
-                                model![index].question,
-                                style: TextStyle(fontSize: 20.sp),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(top: 20.h),
-                              child: Text(
-                                model![index].questionDate,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Divider(
-                          color: defaultColor,
-                        ),
-                        Row(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomeImage(
-                              width: 50.w,
-                              height: 45.h,
-                              borderRadius: BorderRadius.circular(50.r),
-                              margin: const EdgeInsets.all(10),
-                            ),
-                            SizedBox(
-                              width: 210.w,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 8.h,
-                                    ),
-                                    child: const Text(
-                                      'Dr.Manar Albogha',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54),
-                                    ),
-                                  ),
-                                  Divider(
-                                    endIndent: 60.w,
-                                    height: 10.h,
-                                  ),
-                                  Text(
-                                    model![index].answer.toString() == "null"
-                                        ? 'No Answer Yet '
-                                        : model![index].answer.toString(),
-                                    style: TextStyle(fontSize: 20.sp),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            SizedBox(
-                              width: 40.w,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  model![index].answer.toString() == "null"
-                                      ? const Icon(
-                                          Icons.priority_high_rounded,
-                                          color: Colors.red,
-                                        )
-                                      : const Icon(
-                                          Icons.check_circle_outlined,
-                                          color: Colors.green,
-                                        ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (model![index].answer.toString() != "null")
-                          Divider(
-                            color: defaultColor,
-                            height: 10.h,
-                          ),
-                        if (model![index].answer.toString() != "null")
-                          Text(model![index].answerDate.toString()),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 5.w,
-                  top: 0,
-                  child: Icon(
-                    // model![index].answer.toString() == "null"
-                    // ?
-                    Icons.question_mark,
-                    // : Icons.check_rounded,
-                    size: 60,
-                    color: model![index].answer.toString() == "null"
-                        ? Colors.orange
-                        : Colors.green,
-                  ),
-                ),
-              ],
-            ),
+            itemBuilder: (context, index) =>
+                ConsultationItem(consultationModel: model![index]),
           )
         : Center(
             child: Text(

@@ -50,6 +50,10 @@ class DatesListView extends StatelessWidget {
                             color: addAppointmentCubit.selectIndexDay != index
                                 ? Colors.white
                                 : Colors.black,
+                            decoration: addAppointmentCubit.vaildWorkDay(
+                                    day: addAppointmentCubit.days[index])
+                                ? TextDecoration.none
+                                : TextDecoration.lineThrough,
                             fontWeight: FontWeight.bold,
                             fontSize:
                                 addAppointmentCubit.days[index] == 'Wednesday'
@@ -61,6 +65,10 @@ class DatesListView extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyles.textStyle16.copyWith(
                             fontSize: 12.sp,
+                            decoration: addAppointmentCubit.vaildWorkDay(
+                                    day: addAppointmentCubit.days[index])
+                                ? TextDecoration.none
+                                : TextDecoration.lineThrough,
                             color: addAppointmentCubit.selectIndexDay != index
                                 ? Colors.white
                                 : Colors.black,

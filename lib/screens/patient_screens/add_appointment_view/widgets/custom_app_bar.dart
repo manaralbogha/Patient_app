@@ -17,43 +17,6 @@ class CustomAppBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        // SizedBox(
-        //   width: 90.w,
-        //   child: Stack(
-        //     clipBehavior: Clip.none,
-        //     children: [
-        //       doctorModel.departmentImage == null
-        //           ? CustomeImage(
-        //               height: 40.h,
-        //               width: 45.w,
-        //               borderRadius: BorderRadius.circular(50.r),
-        //             )
-        //           : CustomeNetworkImage(
-        //               imageUrl: doctorModel.departmentImage,
-        //               height: 40.h,
-        //               width: 45.w,
-        //               borderRadius: BorderRadius.circular(50.r),
-        //               fit: BoxFit.cover,
-        //             ),
-        //       Positioned(
-        //         right: 12.w,
-        //         child: doctorModel.imagePath == 'default'
-        //             ? CustomeImage(
-        //                 height: 40.h,
-        //                 width: 45.w,
-        //                 borderRadius: BorderRadius.circular(50.r),
-        //               )
-        //             : CustomeNetworkImage(
-        //                 imageUrl: doctorModel.imagePath,
-        //                 height: 40.h,
-        //                 width: 45.w,
-        //                 borderRadius: BorderRadius.circular(50.r),
-        //                 fit: BoxFit.cover,
-        //               ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         const CustomArrowBackIconButton(),
         const Spacer(flex: 2),
         Text(
@@ -84,7 +47,7 @@ class CustomAppBar extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
               Positioned(
-                left: 22.w,
+                left: 30.w,
                 child: doctorModel.imagePath == 'default'
                     ? CustomeImage(
                         height: 40.h,
@@ -102,7 +65,7 @@ class CustomAppBar extends StatelessWidget {
             ],
           ),
         ),
-        // const CustomArrowBackIconButton(),
+        const SizedBox(width: 10),
       ],
     );
   }
