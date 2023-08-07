@@ -77,7 +77,7 @@ class CustomeNetworkImage extends StatelessWidget {
             ? DecorationImage(
                 fit: fit ?? BoxFit.scaleDown,
                 image:
-                    NetworkImage('http://192.168.43.37:8000/storage/$imageUrl'),
+                    NetworkImage('http://192.168.60.37:8000/upload/$imageUrl'),
               )
             : null,
       ),

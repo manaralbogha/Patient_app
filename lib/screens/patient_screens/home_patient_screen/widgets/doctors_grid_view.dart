@@ -26,6 +26,7 @@ class DoctorsSliverGrid extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           return CustomDoctorItem(
+            fromFavorite: false,
             doctorModel: state.getDepartmentDoctors(
                 departmentImg: (homeCubit.departments.isNotEmpty &&
                         homeCubit.departmentIndex != null)

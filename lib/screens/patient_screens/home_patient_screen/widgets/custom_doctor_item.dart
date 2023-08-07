@@ -7,7 +7,12 @@ import '../../doctor_details_screen/doctor_details_screen.dart';
 
 class CustomDoctorItem extends StatelessWidget {
   final DoctorModel doctorModel;
-  const CustomDoctorItem({super.key, required this.doctorModel});
+  final bool fromFavorite;
+  const CustomDoctorItem({
+    super.key,
+    required this.doctorModel,
+    required this.fromFavorite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +23,13 @@ class CustomDoctorItem extends StatelessWidget {
           width: 200.w,
           child: InkWell(
             onTap: () async {
-              Navigator.pushNamed(context, DoctorDetailsView.route,
-                  arguments: doctorModel);
+              if (fromFavorite) {
+                Navigator.popAndPushNamed(context, DoctorDetailsView.route,
+                    arguments: [doctorModel, fromFavorite]);
+              } else {
+                Navigator.pushNamed(context, DoctorDetailsView.route,
+                    arguments: [doctorModel, fromFavorite]);
+              }
             },
             highlightColor: defaultColor.withOpacity(.5),
             borderRadius: BorderRadius.circular(15),
@@ -67,15 +77,31 @@ class CustomDoctorItem extends StatelessWidget {
                       ),
                     ),
                     // SizedBox(height: 5.w),
-                    Text(
-                      '${doctorModel.specialty} Doctor',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10.w,
-                        color: Colors.grey,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          '${doctorModel.specialty} Doctor',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12.w,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          '(${doctorModel.review}.0 ⭐️)',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 10.w,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 5.w),
                     // Row(

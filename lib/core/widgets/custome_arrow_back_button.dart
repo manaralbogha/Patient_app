@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomArrowBackIconButton extends StatelessWidget {
   final IconData? icon;
-  const CustomArrowBackIconButton({super.key, this.icon});
+  final void Function()? onTap;
+  const CustomArrowBackIconButton({super.key, this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +20,10 @@ class CustomArrowBackIconButton extends StatelessWidget {
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.r),
         ),
-        onTap: () {
-          Navigator.pop(context);
-        },
+        onTap: onTap ??
+            () {
+              Navigator.pop(context);
+            },
         child: Icon(
           icon ?? Icons.arrow_back_ios,
           color: Colors.white,

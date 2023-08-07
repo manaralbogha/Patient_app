@@ -5,14 +5,12 @@ import '../../../errors/failures.dart';
 import '../../http_api_services.dart';
 
 abstract class DeleteFromFavouriteService {
-  static Future<Either<Failure, void>> deleteFromFavourite({
-    required int favouriteID,
-    required String token,
-  }) async {
+  static Future<Either<Failure, void>> deleteFromFavourite(
+      {required String token, required int doctorID}) async {
     try {
       await ApiServices.post(
-        endPoint: 'favorite/delete/$favouriteID',
-        body: {},
+        endPoint: 'favorite/deleteOnDoctor',
+        body: {'doctor_id': '$doctorID'},
         token: token,
       );
 

@@ -6,6 +6,7 @@ import 'package:patient_app/core/api/services/add_evaluation_service.dart';
 import 'package:patient_app/core/api/services/favourite/add_to_favourite_service.dart';
 import 'package:patient_app/core/api/services/favourite/check_is_favourited.dart';
 import 'package:patient_app/core/api/services/favourite/delete_from_favourite_service.dart';
+import 'package:patient_app/core/api/services/get_doctor_details_service.dart';
 import 'package:patient_app/core/api/services/get_doctors_service.dart';
 import 'package:patient_app/screens/patient_screens/doctor_details_screen/cubit/doctor_details_states.dart';
 import '../../../../core/api/services/consultation/send_question_service.dart';
@@ -52,10 +53,10 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
   }
 
   Future<void> deleteFromFavourite(
-      {required int favouriteID, required String token}) async {
+      {required int doctorID, required String token}) async {
     emit(DoctorDetailsLoading());
     (await DeleteFromFavouriteService.deleteFromFavourite(
-            favouriteID: favouriteID, token: token))
+            doctorID: doctorID, token: token))
         .fold(
       (failure) {
         emit(DoctorDetaisFailure(failureMsg: failure.errorMessege));
@@ -151,6 +152,17 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsStates> {
           );
         }
         emit(CheckFavouriteState());
+      },
+    );
+  }
+
+  Future<void> getDoctorDetails({required int userID}) async {
+    (await GetDoctorDetailsService.getDoctorDetails(userID: userID)).fold(
+      (failure) {
+        emit(DoctorDetaisFailure(failureMsg: failure.errorMessege));
+      },
+      (doctorModel) {
+        emit(FetchDoctorDetailsSuccess(doctorModel: doctorModel));
       },
     );
   }

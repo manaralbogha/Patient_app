@@ -25,8 +25,10 @@ class AddAppointmentView extends StatelessWidget {
     DoctorModel doctorModel =
         ModalRoute.of(context)!.settings.arguments as DoctorModel;
     return BlocProvider(
-      create: (context) =>
-          AddAppointmentCubit()..fetchDoctorTimes(doctorID: doctorModel.id),
+      create: (context) {
+        return AddAppointmentCubit()
+          ..fetchDoctorTimes(doctorModel: doctorModel);
+      },
       child: SafeArea(
         child: GestureDetector(
           onTap: () {
